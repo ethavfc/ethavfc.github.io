@@ -11,9 +11,47 @@
 <body>
   <div class="wrapper">
     <div>
-      <a class="home-link" href="{{ '/' | relative_url }}">← Home</a>
+      <a class="home-link" href="{{ '/' | relative_url }}">Home</a>
       {{ content }}
     </div>
   </div>
+
+  <!-- Adds a copy button to every code block -->
+  <script>
+    document.querySelectorAll('pre').forEach(function (pre) {
+      var wrap = document.createElement('div');
+      wrap.className = 'code-wrap';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      wrap.appendChild(btn);
+
+      btn.addEventListener('click', function () {
+        var text = pre.innerText.replace(/\n$/, '');
+
+        function done() {
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+        }
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(done);
+        } else {
+          // Fallback for older browsers
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
