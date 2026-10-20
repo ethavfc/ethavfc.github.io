@@ -1,6 +1,4 @@
-## Apps
-
-### Base install
+### Windows install
 All of these files are included on WinUtils and can be installed on a clean machine without needing to download anything else.  
     
     irm https://christitus.com/win | iex
