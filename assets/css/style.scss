@@ -91,12 +91,23 @@ summary {
 }
 
 /* ---------- Code blocks ---------- */
+/* Jekyll wraps code in these divs; Minimal gives them a light background */
+div.highlighter-rouge,
+div.highlighter-rouge div.highlight,
+.highlight {
+  background: transparent !important;
+  border-radius: 6px;
+}
+
 .code-wrap {
   position: relative;
   margin: 0 0 1.25rem;
+  border-radius: 6px;
+  background: #0d1117;
 }
 
-pre {
+pre,
+pre.highlight {
   background: #0d1117 !important;
   border: 1px solid #30363d;
   border-radius: 6px;
