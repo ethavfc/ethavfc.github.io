@@ -1,5 +1,5 @@
 # HOMEPAGE
 
-Bookmarks [https://ethavfc.github.io/bookmarks]
+[Bookmarks] (https://ethavfc.github.io/bookmarks)
 
-Windows Install [https://ethavfc.github.io/windows]
+[Windows Install] (https://ethavfc.github.io/windows)
