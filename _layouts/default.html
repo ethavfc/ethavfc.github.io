@@ -4,7 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ site.title | default: 'Bookmarks' }}</title>
+  
+  <!-- Loads the base Minimal theme -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+  
+  <!-- Custom Black Theme Overrides -->
+  <style>
+    /* Force pure black background and light grey text */
+    body, .wrapper {
+      background-color: #000000 !important;
+      color: #c9d1d9 !important;
+    }
+
+    /* Make headers solid white */
+    h1, h2, h3, h4, h5, h6, strong {
+      color: #ffffff !important;
+    }
+
+    /* Adjust links to a visible light blue */
+    a {
+      color: #58a6ff !important;
+    }
+
+    /* Ensure the left sidebar/header text is visible */
+    header h1, header h2, header p {
+      color: #ffffff !important;
+    }
+  </style>
 </head>
 <body>
   <div class="wrapper">
