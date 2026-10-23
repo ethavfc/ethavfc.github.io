@@ -33,7 +33,7 @@
   header { text-align: center; padding: 10px 0 6px; }
   h1 {
     margin: 0; font-weight: normal; letter-spacing: .5em; font-size: 34px;
-    color: var(--gold); text-transform: lowercase; padding-left: .5em;
+    color: var(--gold); padding-left: .5em;
   }
   .tagline { color: var(--dim); font-style: italic; font-size: 14px; margin-top: 4px; }
 
@@ -65,16 +65,14 @@
     border: 1px solid var(--gold2); border-radius: 999px; transition: .12s;
     user-select: none;
   }
+  .waitbtn, .waitbtn * { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
+  .waitbtn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none; }
+  .waitbtn:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold2); }
+  button:focus:not(:focus-visible) { outline: none; }
   .waitbtn:hover { background: rgba(242,195,91,.08); }
   .waitbtn:active { transform: scale(.97); }
   .waitnote { display: block; font-size: 12px; color: var(--dim); font-style: italic; margin-top: 2px; }
 
-  .ticker {
-    min-height: 44px; margin: 6px 0 12px; padding: 10px 14px; text-align: center;
-    color: var(--dim); font-style: italic; font-size: 14px;
-    border-left: 2px solid var(--line); border-right: 2px solid var(--line);
-  }
-  .ticker.fun { color: var(--pink); border-color: var(--pink); }
 
   .stats {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 14px;
@@ -101,7 +99,6 @@
   .task.locked { display: none; }
   .tname { font-size: 17px; }
   .tfun { font-size: 12px; color: var(--teal); margin-left: 10px; font-style: italic; }
-  .tflav { font-size: 12.5px; color: var(--dim); font-style: italic; margin-top: 2px; }
   .tinfo { font-size: 12.5px; color: var(--dim); margin-top: 5px; }
   .tinfo b { color: var(--text); font-weight: normal; }
   .tbuy { display: flex; gap: 6px; }
@@ -169,7 +166,7 @@
   .toast {
     position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
     background: var(--panel2); border: 1px solid var(--gold2); color: var(--text);
-    padding: 9px 16px; border-radius: 999px; font-size: 13px; z-index: 40; opacity: 0; transition: opacity .3s; pointer-events: none;
+    padding: 9px 16px; border-radius: 16px; max-width: 90vw; text-align: center; font-size: 13px; z-index: 40; opacity: 0; transition: opacity .3s; pointer-events: none;
   }
   .toast.on { opacity: 1; }
 
@@ -186,32 +183,30 @@
 <div class="wrap">
   <header>
     <h1>Time</h1>
-    <div class="tagline">We never have enough, so go ahead and buy yourself some time!</div>
+    <div class="tagline">You never seem to have enough time, go ahead and buy yourself some</div>
   </header>
 
   <section class="hero">
     <div class="clockface"></div>
-    <div class="bank mono"><span id="bank">0</span><small id="bankunit">seconds bought</small></div>
+    <div class="bank mono"><span id="bank">0</span><small id="bankunit">Seconds Bought</small></div>
     <div class="rate mono" id="rate"></div>
-    <button class="waitbtn" id="wait">Wait around<span class="waitnote" id="waitnote">+1 second. Riveting.</span></button>
+    <button class="waitbtn" id="wait">Wait Around<span class="waitnote" id="waitnote">+1 second. Riveting.</span></button>
   </section>
 
-  <div class="ticker" id="ticker"></div>
-
   <div class="stats">
-    <div class="stat"><div class="k">Fun level</div><div class="v" id="funv">&ndash;</div><div class="funbar"><div id="funbarfill"></div></div></div>
-    <div class="stat"><div class="k">This timeline</div><div class="v mono" id="realclock">0:00</div></div>
-    <div class="stat"><div class="k">Time Turner bonus</div><div class="v mono" id="turnbonus">&times;1</div></div>
+    <div class="stat"><div class="k">Fun Level</div><div class="v" id="funv">&ndash;</div><div class="funbar"><div id="funbarfill"></div></div></div>
+    <div class="stat"><div class="k">This Timeline</div><div class="v mono" id="realclock">0:00</div></div>
+    <div class="stat" id="turnstat"><div class="k">Wisdom Bonus</div><div class="v mono" id="turnbonus">&times;1</div></div>
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="tasks">How you spend it</button>
-    <button class="tab" data-tab="turner" id="turnertab">Time Turner <span class="badge" id="turnerbadge"></span></button>
+    <button class="tab active" data-tab="tasks">How You Spend It</button>
+    <button class="tab hidden" data-tab="turner" id="turnertab">Time Turner <span class="badge" id="turnerbadge"></span></button>
   </div>
 
   <section id="tab-tasks">
     <div class="toolbar">
-      <button class="small" id="maxall">Buy max (M)</button>
+      <button class="small" id="maxall">Buy Max (M)</button>
     </div>
     <div id="tasks"></div>
   </section>
@@ -219,10 +214,10 @@
   <section id="tab-turner" class="hidden">
     <div class="turner-hero">
       <h2>The Time Turner</h2>
-      <p id="turnerlore">Twist it and you'll wake up at the start of the day, holding every lesson you learned. Do things differently this time.</p>
-      <p>Turners in hand: <span class="big mono" id="turnerhave">0</span> &nbsp;·&nbsp; lifetime rewinds: <span class="mono" id="rewinds">0</span></p>
+      <p id="turnerlore">A small hourglass on a golden chain, the kind of thing that shouldn't exist. Let the sand run the other way and you'll be back at the start of the day, keeping everything you've learned. That is Wisdom, and it lets you do things differently this time.</p>
+      <p>Wisdom: <span class="big mono" id="turnerhave">0</span> &nbsp;·&nbsp; Lifetime rewinds: <span class="mono" id="rewinds">0</span></p>
       <p id="turnergain"></p>
-      <button class="rewind" id="rewind" disabled>Turn it back</button>
+      <button class="rewind" id="rewind" disabled>Turn Back Time</button>
     </div>
     <div class="upg-grid" id="upgs"></div>
     <div class="log"><h3>Timelines</h3><div id="timelines"></div></div>
@@ -232,9 +227,9 @@
     <button class="small" id="save">Save</button>
     <button class="small" id="export">Export</button>
     <button class="small" id="import">Import</button>
-    <button class="small" id="hardreset">Wipe everything</button>
+    <button class="small" id="hardreset">Wipe Everything</button>
   </div>
-  <footer>An incremental game about wasting less of it. Saves automatically to this browser.</footer>
+  <footer>An incremental game about wasting less time. How ironic.</footer>
 </div>
 
 <div id="flash"><div class="rw"></div><div class="msg" id="flashmsg">Rewinding&hellip;</div></div>
@@ -246,38 +241,44 @@
 
 /* ------------------------------------------------------------------ data */
 
-const FUN_NAMES = ['', 'Deadly dull', 'Tolerable', 'Pretty good', 'Great fun', 'Total flow'];
+const FUN_NAMES = ['', 'Deadly Dull', 'Tolerable', 'Pretty Good', 'Great Fun', 'Total Flow'];
 
-// rate: how much one unit makes per second. Tier 0 makes Time, tier n makes tier n-1.
-// That chain is what makes growth polynomial: tier k's stock grows like t^(k+1).
+// Every task makes Time directly: one unit makes `rate` seconds per second.
+// Each purchase raises that task's next cost by `mult`, and every 10th purchase
+// doubles its output. Cost climbs faster than output, so the wait for the next
+// upgrade keeps lengthening, and Wisdom is what makes up the difference.
 const TASKS = [
-  { name: 'Watch Paint Dry',        fun: 1, cost: 30,    mult: 1.18, rate: 0.25,  flavor: 'Somehow it was only 40 seconds ago.' },
-  { name: 'Queue at the Post Office', fun: 1, cost: 250,   mult: 1.30, rate: 0.06,  flavor: 'You are number 87 in the queue.' },
-  { name: 'Do Your Tax Return',     fun: 2, cost: 8e3,    mult: 1.40, rate: 0.05,  flavor: 'Where did you put that receipt?' },
-  { name: 'Tidy the Garage',        fun: 2, cost: 4e5,    mult: 1.50, rate: 0.04,  flavor: 'Podcast on. Not bad, actually.' },
-  { name: 'Play a Board Game',      fun: 3, cost: 2.5e7,  mult: 1.60, rate: 0.035, flavor: 'Whose turn is it? Nobody knows. Nobody cares.' },
-  { name: 'Dance in the Kitchen',   fun: 4, cost: 2e9,    mult: 1.70, rate: 0.03,  flavor: 'The kettle boiled an hour ago.' },
-  { name: 'Binge Your Favourite Show', fun: 4, cost: 3e11, mult: 1.80, rate: 0.025, flavor: 'Just one more episode. It is now 4am.' },
-  { name: 'Lose Yourself in a Hobby', fun: 5, cost: 1e14,  mult: 1.90, rate: 0.02,  flavor: 'Hours are a rumour.' },
+  { name: 'Watch Paint Dry',           fun: 1, cost: 30,     mult: 1.22, rate: 0.3 },
+  { name: 'Queue at the Post Office',  fun: 1, cost: 500,    mult: 1.28, rate: 1.5 },
+  { name: 'Do Your Tax Return',        fun: 2, cost: 1.5e4,  mult: 1.34, rate: 8 },
+  { name: 'Tidy the Garage',           fun: 2, cost: 6e5,    mult: 1.40, rate: 40 },
+  { name: 'Play a Board Game',         fun: 3, cost: 3e7,    mult: 1.46, rate: 220 },
+  { name: 'Dance in the Kitchen',      fun: 4, cost: 2e9,    mult: 1.52, rate: 1200 },
+  { name: 'Binge Your Favourite Show', fun: 4, cost: 2e11,   mult: 1.58, rate: 6500 },
+  { name: 'Lose Yourself in a Hobby',  fun: 5, cost: 3e13,   mult: 1.64, rate: 36000 },
 ];
 
-const CLICKS_REQUIRED = 30;  // manual waits needed before the first task can be bought (lifetime, one-off)
-const TURNER_THRESHOLD = 1e6;   // total Time bought in a timeline before a turner is worth it
-const TURNER_EXP = 0.3;
+const CLICKS_REQUIRED = 30;        // manual waits needed before the first task can be bought (lifetime, one-off)
+const WISDOM_THRESHOLD = 604800;   // one week of Time bought in a single timeline earns the first Wisdom
+const WISDOM_COEF = 2;             // Wisdom earned = COEF * (total / THRESHOLD) ^ EXP
+const WISDOM_EXP = 0.45;
+const WISDOM_BONUS = 0.15;         // each Wisdom earned permanently adds this to your multiplier
+const DISCOVER_AT = 0.5;           // the Time Turner is found at this fraction of the threshold
+const OFFLINE_EFFICIENCY = 0.5;    // time passing while you are away is worth half as much
+const OFFLINE_CAP = 2 * 3600;
 
 const UPGRADES = [
-  { id: 'head',   name: 'Head Start',            cost: 1,  desc: 'Every timeline begins with 100 seconds already in the bank.' },
-  { id: 'click',  name: 'Muscle Memory',         cost: 2,  desc: 'You have waited around before. Waiting is worth ×5.' },
-  { id: 'company',name: 'Good Company',          cost: 3,  desc: 'The fun tasks (Board Game and beyond) are ×3 as effective. Time flies.' },
-  { id: 'autoD',  name: 'Autopilot: The Dull',   cost: 4,  desc: 'Automatically buys Paint Dry and the Post Office so you never think about them again.' },
-  { id: 'skip',   name: 'Skip the Boring Bits',  cost: 5,  desc: 'The three dullest tasks cost 50% less. You learned to bring a book.' },
-  { id: 'stretch',name: 'Stretch the Hour',      cost: 6,  desc: 'All time you buy is doubled. An afternoon lasts forever.' },
-  { id: 'seize',  name: 'Seize the Day',         cost: 8,  desc: 'Task milestones arrive every 8 purchases instead of 10.' },
-  { id: 'autoF',  name: 'Autopilot: The Fun',    cost: 10, desc: 'Automatically buys every task from Tidy the Garage onward.' },
-  { id: 'paradox',name: 'Benevolent Paradox',    cost: 12, desc: 'You meet yourself coming the other way. Turners earned ×1.5.' },
+  { id: 'head',    name: 'Head Start',           cost: 1,  desc: 'Every timeline begins with 5 Watch Paint Dry already at work.' },
+  { id: 'click',   name: 'Muscle Memory',        cost: 2,  desc: 'You have waited around before. Waiting is worth ×5.' },
+  { id: 'company', name: 'Good Company',         cost: 3,  desc: 'The fun tasks (Board Game and beyond) are ×3 as effective. Time flies.' },
+  { id: 'skip',    name: 'Skip the Boring Bits', cost: 4,  desc: 'The three dullest tasks cost 50% less. You learned to bring a book.' },
+  { id: 'stretch', name: 'Stretch the Hour',     cost: 6,  desc: 'All the time you buy is ×1.5. An afternoon lasts forever.' },
+  { id: 'wind',    name: 'Second Wind',          cost: 7,  desc: 'Each time you Wait Around you also gain 2% of what you make every second.' },
+  { id: 'seize',   name: 'Seize the Day',        cost: 8,  desc: 'Task milestones arrive every 8 purchases instead of 10.' },
+  { id: 'paradox', name: 'Benevolent Paradox',   cost: 12, desc: 'You meet yourself coming the other way. Wisdom earned ×1.5.' },
 ];
 
-const SAVE_KEY = 'time-incremental-v1';
+const SAVE_KEY = 'time-incremental-v2';
 
 /* ------------------------------------------------------------------ state */
 
@@ -288,13 +289,15 @@ function freshState() {
     lifeTotal: 0,
     amt: TASKS.map(() => 0),
     bought: TASKS.map(() => 0),
-    turners: 0,
-    lifeTurners: 0,
+    wisdom: 0,
+    lifeWisdom: 0,
     rewinds: 0,
     upg: {},
     realRun: 0,      // seconds of real time in this timeline
+    found: false,    // has the Time Turner been discovered?
+    unseen: false,   // discovered but tab not opened yet
     clicks: 0,
-    timelines: [],   // [{n, total, turners}]
+    timelines: [],   // [{n, total, wisdom}]
     last: Date.now(),
   };
 }
@@ -304,9 +307,9 @@ let S = freshState();
 
 const has = id => !!S.upg[id];
 const mileEvery = () => has('seize') ? 8 : 10;
-const turnerMult = () => 1 + 0.25 * S.lifeTurners;
-const globalMult = () => turnerMult() * (has('stretch') ? 2 : 1);
-const clickValue = () => (has('click') ? 5 : 1) * globalMult();
+const wisdomMult = () => 1 + WISDOM_BONUS * S.lifeWisdom;
+const globalMult = () => wisdomMult() * (has('stretch') ? 1.5 : 1);
+const clickValue = () => (has('click') ? 5 : 1) * globalMult() + (has('wind') ? 0.02 * productionPerSec() : 0);
 
 function tierMult(i) {
   let m = Math.pow(2, Math.floor(S.bought[i] / mileEvery()));
@@ -319,16 +322,18 @@ function costOf(i, bought = S.bought[i]) {
   return c;
 }
 function productionPerSec() { // Time per second, right now
-  return S.amt[0] * tierMult(0) * TASKS[0].rate * globalMult();
+  let p = 0;
+  for (let i = 0; i < TASKS.length; i++) p += S.amt[i] * tierMult(i) * TASKS[i].rate;
+  return p * globalMult();
 }
 function funAverage() {
   let n = 0, s = 0;
   for (let i = 0; i < TASKS.length; i++) { n += S.bought[i]; s += S.bought[i] * TASKS[i].fun; }
   return n ? s / n : 1;
 }
-function turnerGain() {
-  if (S.runTotal < TURNER_THRESHOLD) return 0;
-  let g = Math.floor(Math.pow(S.runTotal / TURNER_THRESHOLD, TURNER_EXP) );
+function wisdomGain() {
+  if (S.runTotal < WISDOM_THRESHOLD) return 0;
+  let g = Math.floor(WISDOM_COEF * Math.pow(S.runTotal / WISDOM_THRESHOLD, WISDOM_EXP));
   if (has('paradox')) g = Math.floor(g * 1.5);
   return Math.max(g, 1);
 }
@@ -336,22 +341,21 @@ function turnerGain() {
 /* ------------------------------------------------------------------ simulation */
 
 function step(dt) {
-  for (let i = TASKS.length - 1; i >= 0; i--) {
-    const p = S.amt[i] * tierMult(i) * TASKS[i].rate * dt;
-    if (i === 0) {
-      const t = p * globalMult();
-      S.time += t; S.runTotal += t; S.lifeTotal += t;
-    } else {
-      S.amt[i - 1] += p;
-    }
-  }
+  const t = productionPerSec() * dt;
+  S.time += t; S.runTotal += t; S.lifeTotal += t;
   S.realRun += dt;
 }
+function catchUp(secs) { // time you were not watching is worth less
+  secs = Math.min(secs, OFFLINE_CAP);
+  const t = productionPerSec() * secs * OFFLINE_EFFICIENCY;
+  S.time += t; S.runTotal += t; S.lifeTotal += t;
+  return t;
+}
 
-function autobuy() {
-  const lo = has('autoD') ? 0 : -1, hi = has('autoD') ? 1 : -1;
-  for (let i = lo; i >= 0 && i <= hi; i++) buyMax(i, true);
-  if (has('autoF')) for (let i = 3; i < TASKS.length; i++) buyMax(i, true);
+function checkDiscovery() {
+  if (S.found || S.runTotal < WISDOM_THRESHOLD * DISCOVER_AT) return;
+  S.found = true; S.unseen = true;
+  toast('Behind the old paint tins, something glints: a Time Turner. Have a look.', 7000);
 }
 
 function gated(i) { return i === 0 && S.clicks < CLICKS_REQUIRED; }
@@ -396,46 +400,6 @@ function timeParts(sec) {
 }
 function fmtTime(sec) { const [v, u] = timeParts(sec); return v + ' ' + u; }
 
-/* ------------------------------------------------------------------ ticker messages */
-
-const MSG_BORED = [
-  'You check the clock. It has gone backwards. Surely.',
-  'A watched pot never boils. A watched clock actively retreats.',
-  'Every minute feels like an hour when you are counting minutes.',
-  'You count the ceiling tiles. Twice. The second time gets you 4 seconds.',
-  'Time is a flat circle, and it is a very beige one.',
-  'You have read the back of the shampoo bottle. Again.',
-];
-const MSG_MID = [
-  'The hours are starting to blur a little.',
-  'Funny. You almost forgot to check the clock.',
-  'Things go quicker when you are doing something you do not hate.',
-  'Was it really lunchtime already?',
-  'Somewhere between dull and delightful, the afternoon slips by.',
-];
-const MSG_FUN = [
-  'Time flies when you are having fun. It also files taxes, apparently.',
-  'You look up. The sun has set. You are absolutely fine with this.',
-  'Nobody ever lay on their deathbed wishing they had queued longer.',
-  'The clock is still there, but it has stopped nagging.',
-  'An hour? That felt like five minutes.',
-  'You have never been less aware of the time, or had more of it.',
-];
-let tickerIdx = 0, tickerAt = 0;
-function updateTicker(force) {
-  const now = Date.now();
-  if (!force && now - tickerAt < 9000) return;
-  tickerAt = now;
-  const f = funAverage(), el = document.getElementById('ticker');
-  let pool, cls = '';
-  if (S.bought[0] === 0 && S.runTotal < 10) pool = ['You have no time at all. Start by waiting around. It is the only thing left to do.'];
-  else if (f < 1.8) pool = MSG_BORED;
-  else if (f < 3) pool = MSG_MID;
-  else { pool = MSG_FUN; cls = 'fun'; }
-  el.textContent = pool[tickerIdx++ % pool.length];
-  el.className = 'ticker ' + cls;
-}
-
 /* ------------------------------------------------------------------ DOM build */
 
 const $ = id => document.getElementById(id);
@@ -450,7 +414,6 @@ function buildTasks() {
     el.innerHTML = `
       <div>
         <div><span class="tname">${t.name}</span><span class="tfun">${FUN_NAMES[t.fun]}</span></div>
-        <div class="tflav">${t.flavor}</div>
         <div class="tinfo"></div>
         <div class="milebar"><div></div></div>
       </div>
@@ -475,8 +438,8 @@ function buildUpgrades() {
     b.dataset.id = u.id;
     b.innerHTML = `<div class="n">${u.name}</div><div class="d">${u.desc}</div><div class="c"></div>`;
     b.onclick = () => {
-      if (has(u.id) || S.turners < u.cost) return;
-      S.turners -= u.cost; S.upg[u.id] = true;
+      if (has(u.id) || S.wisdom < u.cost) return;
+      S.wisdom -= u.cost; S.upg[u.id] = true;
       toast(u.name + ' learned.');
       save(true); renderAll();
     };
@@ -489,7 +452,7 @@ function buildUpgrades() {
 function render() {
   const bp = timeParts(S.time);
   $('bank').textContent = bp[0];
-  $('bankunit').textContent = bp[1] + ' bought';
+  $('bankunit').textContent = bp[1].charAt(0).toUpperCase() + bp[1].slice(1) + ' Bought';
   $('rate').textContent = '+' + fmt(productionPerSec(), 2) + ' seconds per second';
   $('waitnote').textContent = '+' + fmt(clickValue(), 1) + (clickValue() === 1 ? ' second. Riveting.' : ' seconds.');
 
@@ -497,7 +460,9 @@ function render() {
   $('funv').textContent = S.bought.some(b => b) ? FUN_NAMES[Math.round(f)] : '–';
   $('funbarfill').style.width = ((f - 1) / 4 * 100) + '%';
   $('realclock').textContent = fmtClock(S.realRun);
-  $('turnbonus').textContent = '×' + fmt(turnerMult(), 2) + (has('stretch') ? ' (×2 more)' : '');
+  $('turnertab').classList.toggle('hidden', !S.found);
+  $('turnstat').classList.toggle('hidden', !S.found);
+  $('turnbonus').textContent = '×' + fmt(wisdomMult(), 2) + (has('stretch') ? ' (×1.5 more)' : '');
 
   taskEls.forEach((t, i) => {
     const unlocked = i === 0 || S.bought[i] > 0 || S.time >= costOf(i) * 0.5 || (i > 0 && S.bought[i - 1] > 0 && S.time >= costOf(i) * 0.1);
@@ -508,68 +473,68 @@ function render() {
     t.b1.disabled = g || S.time < c;
     t.bm.disabled = g || S.time < c;
     t.lbl.textContent = g ? 'Locked' : 'Buy';
-    t.c.textContent = g ? 'Wait around ' + S.clicks + '/' + CLICKS_REQUIRED : fmtTime(c);
-    const target = i === 0 ? 'seconds' : TASKS[i - 1].name;
-    const per = tierMult(i) * TASKS[i].rate * (i === 0 ? globalMult() : 1);
-    t.info.innerHTML = `Owned <b class="mono">${fmt(S.amt[i], 1)}</b> · bought ${S.bought[i]} · each makes <b class="mono">${fmt(per, 2)}</b> ${i === 0 ? 'seconds' : 'of "' + target + '"'}/s · <b>×${fmt(tierMult(i), 1)}</b>`;
+    t.c.textContent = g ? 'Wait Around ' + S.clicks + '/' + CLICKS_REQUIRED : fmtTime(c);
+    const per = tierMult(i) * TASKS[i].rate * globalMult();
     const every = mileEvery();
+    t.info.innerHTML = `Owned <b class="mono">${fmt(S.amt[i], 1)}</b> · Each makes <b class="mono">${fmt(per, 2)}</b>/s · Together <b class="mono">${fmt(per * S.amt[i], 2)}</b>/s · <b>×${fmt(tierMult(i), 1)}</b> · Next ×2 in ${every - S.bought[i] % every}`;
     t.bar.style.width = ((S.bought[i] % every) / every * 100) + '%';
   });
 
   // prestige tab
-  const g = turnerGain();
-  $('turnerhave').textContent = S.turners;
+  const g = wisdomGain();
+  $('turnerhave').textContent = S.wisdom;
   $('rewinds').textContent = S.rewinds;
   $('rewind').disabled = g < 1;
   $('turnergain').innerHTML = g >= 1
-    ? `Rewinding now would grant <span class="big mono">${g}</span> Time Turner${g === 1 ? '' : 's'}. (Based on <span class="mono">${fmtTime(S.runTotal)}</span> bought this timeline.)`
-    : `Buy <span class="mono">${fmtTime(TURNER_THRESHOLD)}</span> in one timeline to earn your first Time Turner. (Currently ${fmtTime(S.runTotal)}.)`;
-  const unspendable = S.rewinds === 0 && S.turners === 0;
+    ? `Turning back time now would grant <span class="big mono">${g}</span> Wisdom. (Based on <span class="mono">${fmtTime(S.runTotal)}</span> bought this timeline.)`
+    : `Buy <span class="mono">${fmtTime(WISDOM_THRESHOLD)}</span> in one timeline to earn your first Wisdom. (Currently ${fmtTime(S.runTotal)}.)`;
   document.querySelectorAll('.upg').forEach(b => {
     const u = UPGRADES.find(x => x.id === b.dataset.id);
     const owned = has(u.id);
     b.classList.toggle('owned', owned);
-    b.classList.toggle('cant', !owned && S.turners < u.cost);
-    b.querySelector('.c').textContent = owned ? 'Learned' : u.cost + ' Turner' + (u.cost === 1 ? '' : 's');
+    b.classList.toggle('cant', !owned && S.wisdom < u.cost);
+    b.querySelector('.c').textContent = owned ? 'Learned' : u.cost + ' Wisdom';
   });
-  const affordable = UPGRADES.some(u => !has(u.id) && S.turners >= u.cost);
-  $('turnerbadge').textContent = (g >= 1 || affordable) ? '●' : '';
+  const affordable = UPGRADES.some(u => !has(u.id) && S.wisdom >= u.cost);
+  $('turnerbadge').textContent = (g >= 1 || affordable || S.unseen) ? '●' : '';
 
   const tl = $('timelines');
   tl.innerHTML = S.timelines.length
-    ? S.timelines.slice(-6).reverse().map(x => `Timeline ${x.n}: bought ${fmtTime(x.total)} → +${x.turners} Turner${x.turners === 1 ? '' : 's'}`).join('<br>')
+    ? S.timelines.slice(-6).reverse().map(x => `Timeline ${x.n}: Bought ${fmtTime(x.total)} → +${x.wisdom} Wisdom`).join('<br>')
     : 'No other timelines yet. This is the first, and so far the only, you.';
 }
 function renderAll() { render(); }
 
-function toast(msg) {
+function toast(msg, ms) {
   const t = $('toast'); t.textContent = msg; t.classList.add('on');
-  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 1800);
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), ms || 1800);
 }
 
 /* ------------------------------------------------------------------ prestige */
 
 const REWIND_LINES = [
-  'You twist the hourglass. The day unwinds.',
+  'The hourglass spins on its chain. The day unwinds.',
   'The sun rises in the west, briefly.',
   'You wake up knowing exactly what is going to happen. Mostly.',
   'This time, you bring snacks.',
 ];
 
+let rewinding = false;
 function rewind() {
-  const g = turnerGain();
-  if (g < 1) return;
-  if (S.rewinds === 0 && !confirm('Turn back time? Your Time, tasks and progress this timeline reset, but you keep the Time Turners and everything you learned.')) return;
+  const g = wisdomGain();
+  if (g < 1 || rewinding) return;
+  rewinding = true;
   const f = $('flash');
   $('flashmsg').textContent = REWIND_LINES[Math.floor(Math.random() * REWIND_LINES.length)];
   f.classList.add('on');
   setTimeout(() => {
-    S.timelines.push({ n: S.rewinds + 1, total: S.runTotal, turners: g });
-    S.turners += g; S.lifeTurners += g; S.rewinds++;
-    S.time = has('head') ? 100 : 0;
-    S.runTotal = 0; S.amt = TASKS.map(() => 0); S.bought = TASKS.map(() => 0);
+    S.timelines.push({ n: S.rewinds + 1, total: S.runTotal, wisdom: g });
+    S.wisdom += g; S.lifeWisdom += g; S.rewinds++;
+    S.time = 0;
+    S.runTotal = 0; S.amt = TASKS.map((_, i) => (i === 0 && has('head')) ? 5 : 0); S.bought = TASKS.map(() => 0);
     S.realRun = 0;
-    save(true); renderAll(); updateTicker(true);
+    rewinding = false;
+    save(true); renderAll();
   }, 1200);
   setTimeout(() => f.classList.remove('on'), 1900);
 }
@@ -590,19 +555,21 @@ function load() {
     const o = JSON.parse(raw);
     S = Object.assign(freshState(), o);
     while (S.amt.length < TASKS.length) { S.amt.push(0); S.bought.push(0); }
+    if (S.rewinds > 0 || S.lifeWisdom > 0) S.found = true;
   } catch (e) { S = freshState(); }
 }
 function offline() {
-  const secs = Math.min((Date.now() - S.last) / 1000, 8 * 3600);
+  const secs = (Date.now() - S.last) / 1000;
   if (secs < 5) return;
-  const before = S.time;
-  const n = 4000, dt = secs / n;
-  for (let k = 0; k < n; k++) { step(dt); if (k % 50 === 0) autobuy(); }
-  toast('While you were away: +' + fmtTime(S.time - before));
+  const gained = catchUp(secs);
+  if (gained > 0) toast('While you were away: +' + fmtTime(gained), 4000);
 }
 
 /* ------------------------------------------------------------------ wiring */
 
+// stop the button taking focus on mouse-down: no focus ring flicker, and Space keeps working
+$('wait').onmousedown = e => e.preventDefault();
+$('wait').ondblclick = e => e.preventDefault();
 $('wait').onclick = () => {
   const v = clickValue();
   S.time += v; S.runTotal += v; S.lifeTotal += v; S.clicks++;
@@ -610,7 +577,18 @@ $('wait').onclick = () => {
 };
 $('maxall').onclick = maxAll;
 function maxAll() { for (let i = TASKS.length - 1; i >= 0; i--) buyMax(i); render(); }
-$('rewind').onclick = rewind;
+function twoStep(btn, idleText, armedText, fn) {
+  let armed = false, h;
+  btn.onclick = () => {
+    if (!armed) {
+      armed = true; btn.textContent = armedText;
+      h = setTimeout(() => { armed = false; btn.textContent = idleText; }, 4000);
+      return;
+    }
+    armed = false; clearTimeout(h); btn.textContent = idleText; fn();
+  };
+}
+twoStep($('rewind'), 'Turn Back Time', 'Reset This Timeline? Click Again', rewind);
 $('save').onclick = () => save(false);
 $('export').onclick = () => {
   save(true);
@@ -624,14 +602,15 @@ $('import').onclick = () => {
     const o = JSON.parse(decodeURIComponent(escape(atob(s.trim()))));
     S = Object.assign(freshState(), o);
     S.last = Date.now();
+    if (S.rewinds > 0 || S.lifeWisdom > 0) S.found = true;
     save(true); renderAll(); toast('Save loaded.');
   } catch (e) { toast('That does not look like a save.'); }
 };
-$('hardreset').onclick = () => {
-  if (!confirm('Wipe EVERYTHING, including Time Turners? There is no turning this back.')) return;
+twoStep($('hardreset'), 'Wipe Everything', 'Wipe It All? Click Again', () => {
   S = freshState(); save(true); renderAll();
-};
+});
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+  if (b.dataset.tab === 'turner') S.unseen = false;
   document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === b));
   $('tab-tasks').classList.toggle('hidden', b.dataset.tab !== 'tasks');
   $('tab-turner').classList.toggle('hidden', b.dataset.tab !== 'turner');
@@ -648,25 +627,26 @@ buildTasks();
 buildUpgrades();
 load();
 offline();
-updateTicker(true);
+checkDiscovery();
 render();
 
-let lastFrame = performance.now(), autoClock = 0, saveClock = 0;
+let lastFrame = performance.now(), saveClock = 0;
 setInterval(() => {
   const now = performance.now();
-  const dt = Math.min((now - lastFrame) / 1000, 1);
+  const real = (now - lastFrame) / 1000;
+  const dt = Math.min(real, 1);
   lastFrame = now;
   step(dt);
-  autoClock += dt; saveClock += dt;
-  if (autoClock > 0.25) { autoClock = 0; autobuy(); }
+  if (real > 1) catchUp(real - 1); // tab was throttled or asleep
+  checkDiscovery();
+  saveClock += dt;
   if (saveClock > 10) { saveClock = 0; save(true); }
-  updateTicker(false);
   render();
 }, 100);
 
 window.addEventListener('beforeunload', () => save(true));
 // expose a tiny debug handle for tinkering in the console
-window.__time = { get S() { return S; }, add(n) { S.time += n; S.runTotal += n; render(); } };
+window.__time = { get S() { return S; }, add(n) { S.time += n; S.runTotal += n; render(); }, buy, step, costOf, productionPerSec };
 })();
 </script>
 </body>
