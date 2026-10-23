@@ -200,7 +200,7 @@
 
   <div class="tabs">
     <button class="tab active" data-tab="tasks">How You Spend It</button>
-    <button class="tab hidden" data-tab="turner" id="turnertab">Chronos Amulet <span class="badge" id="turnerbadge"></span></button>
+    <button class="tab hidden" data-tab="turner" id="turnertab">Time Turner <span class="badge" id="turnerbadge"></span></button>
   </div>
 
   <section id="tab-tasks">
@@ -212,8 +212,8 @@
 
   <section id="tab-turner" class="hidden">
     <div class="turner-hero">
-      <h2>The Chronos Amulet</h2>
-      <p id="turnerlore">An enchanted hourglass on a golden chain, radiating ancient magic. Let the enchanted sand run backward and you'll return to the start of the day, retaining everything you've learned. That is Arcane Wisdom, and it allows you to shape reality differently this time.</p>
+      <h2>The Time Turner</h2>
+      <p id="turnerlore">A tiny golden hourglass on a fine chain, worn round the neck. The Ministry of Magic once lent these out to students with timetables that made no sense, and a single turn of the hourglass was enough to send the wearer back an hour. This one has been tinkered with, so it carries you all the way back to the start of the day, the way the modified Time-Turner in the Cursed Child did. Just make sure your earlier self never catches sight of you. What you learned the first time round stays with you. That is Wisdom, and it lets you do things differently this time.</p>
       <p>Wisdom: <span class="big mono" id="turnerhave">0</span> &nbsp;·&nbsp; Lifetime rewinds: <span class="mono" id="rewinds">0</span></p>
       <p id="turnergain"></p>
       <button class="rewind" id="rewind" disabled>Turn Back Time</button>
@@ -343,7 +343,7 @@ function catchUp(secs) {
 function checkDiscovery() {
   if (S.found || S.runTotal < WISDOM_THRESHOLD * DISCOVER_AT) return;
   S.found = true; S.unseen = true;
-  toast('Hidden in an ancient tome, something glints: a Chronos Amulet. Have a look.', 7000);
+  toast('Hidden in an ancient tome, something glints: a Time Turner. Have a look.', 7000);
 }
 
 function gated(i) { return i === 0 && S.clicks < CLICKS_REQUIRED; }
