@@ -4,169 +4,166 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Time</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d1020;
-    --panel: #161a30;
-    --panel2: #1d2240;
-    --line: #2b3260;
-    --text: #e8e6f0;
-    --dim: #8f93b5;
-    --gold: #f2c35b;
-    --gold2: #b8862b;
-    --teal: #5fd1c4;
-    --pink: #ff7aa8;
-    --bad: #7d8199;
+    --bg: #110c14;
+    --panel: #1f1826;
+    --panel2: #2d2338;
+    --line: #5c4d32;
+    --text: #eaddcf;
+    --dim: #a69886;
+    --gold: #d4af37;
+    --gold2: #9e7f22;
+    --teal: #3b9e82;
+    --pink: #9e5b7b;
+    --bad: #6e6568;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--text); }
   body {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: 'Crimson Text', Georgia, "Times New Roman", serif;
     min-height: 100vh;
     background:
-      radial-gradient(1200px 600px at 50% -200px, #232a55 0%, transparent 70%),
+      radial-gradient(1200px 600px at 50% -200px, #2a1f3d 0%, transparent 70%),
       var(--bg);
   }
   .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
   .wrap { max-width: 920px; margin: 0 auto; padding: 18px 16px 60px; }
 
   header { text-align: center; padding: 10px 0 6px; }
+  h1, h2, .tab { font-family: 'Cinzel', serif; }
   h1 {
-    margin: 0; font-weight: normal; letter-spacing: .5em; font-size: 34px;
-    color: var(--gold); padding-left: .5em;
+    margin: 0; font-weight: normal; letter-spacing: .3em; font-size: 38px;
+    color: var(--gold); padding-left: .3em; text-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
   }
-  .tagline { color: var(--dim); font-style: italic; font-size: 14px; margin-top: 4px; }
+  .tagline { color: var(--dim); font-style: italic; font-size: 16px; margin-top: 4px; }
 
   .hero {
     background: linear-gradient(180deg, var(--panel2), var(--panel));
-    border: 1px solid var(--line); border-radius: 14px;
-    padding: 18px; margin: 14px 0; text-align: center; position: relative; overflow: hidden;
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 24px; margin: 18px 0; text-align: center; position: relative; overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   }
-  .clockface {
-    position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; opacity: .13;
-    border: 3px solid var(--gold); border-radius: 50%;
-  }
-  .clockface::before, .clockface::after {
-    content: ""; position: absolute; left: 50%; top: 50%; width: 3px; background: var(--gold);
-    transform-origin: 50% 100%; border-radius: 2px;
-  }
-  .clockface::before { height: 55px; margin-top: -55px; animation: spin 12s linear infinite; }
-  .clockface::after  { height: 38px; margin-top: -38px; animation: spin 144s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
   .bank { font-size: 44px; color: var(--gold); line-height: 1.1; }
-  .bank small { font-size: 16px; color: var(--dim); margin-left: 6px; }
-  .human { color: var(--teal); font-size: 14px; min-height: 20px; margin-top: 2px; }
-  .rate { color: var(--dim); font-size: 13px; margin-top: 6px; }
+  .bank small { font-size: 18px; color: var(--dim); margin-left: 6px; font-family: 'Crimson Text', serif;}
+  .rate { color: var(--dim); font-size: 15px; margin-top: 6px; }
 
   .waitbtn {
-    margin-top: 14px; padding: 14px 28px; font: inherit; font-size: 18px;
+    margin-top: 18px; padding: 14px 32px; font: inherit; font-size: 18px;
     background: transparent; color: var(--text); cursor: pointer;
-    border: 1px solid var(--gold2); border-radius: 999px; transition: .12s;
-    user-select: none;
+    border: 1px solid var(--gold2); border-radius: 4px; transition: .12s;
+    user-select: none; font-family: 'Cinzel', serif; letter-spacing: 1px;
   }
   .waitbtn, .waitbtn * { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
   .waitbtn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none; }
   .waitbtn:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold2); }
   button:focus:not(:focus-visible) { outline: none; }
-  .waitbtn:hover { background: rgba(242,195,91,.08); }
+  .waitbtn:hover { background: rgba(212, 175, 55, .1); box-shadow: 0 0 12px rgba(212, 175, 55, 0.2); }
   .waitbtn:active { transform: scale(.97); }
-  .waitnote { display: block; font-size: 12px; color: var(--dim); font-style: italic; margin-top: 2px; }
-
+  .waitnote { display: block; font-size: 13px; color: var(--dim); font-style: italic; margin-top: 4px; font-family: 'Crimson Text', serif; letter-spacing: 0; text-transform: none;}
 
   .stats {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 14px;
   }
-  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
-  .stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); }
-  .stat .v { font-size: 17px; margin-top: 2px; }
-  .funbar { height: 6px; background: #0a0c1a; border-radius: 4px; margin-top: 7px; overflow: hidden; }
-  .funbar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--bad), var(--teal), var(--pink)); transition: width .4s; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
+  .stat .k { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); font-family: 'Cinzel', serif; }
+  .stat .v { font-size: 19px; margin-top: 4px; }
+  .funbar { height: 6px; background: #0a080d; border-radius: 4px; margin-top: 7px; overflow: hidden; border: 1px solid #000; }
+  .funbar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--bad), var(--teal), var(--gold)); transition: width .4s; }
 
   .tabs { display: flex; gap: 6px; margin: 4px 0 10px; }
   .tab {
-    flex: 1; padding: 10px; font: inherit; color: var(--dim); background: var(--panel);
-    border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+    flex: 1; padding: 12px; font: inherit; color: var(--dim); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 6px; cursor: pointer; font-size: 15px; letter-spacing: 1px;
   }
   .tab.active { color: var(--gold); border-color: var(--gold2); background: var(--panel2); }
   .tab .badge { color: var(--pink); }
 
   .task {
     display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center;
-    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
-    padding: 12px 14px; margin-bottom: 8px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: 14px 16px; margin-bottom: 8px; transition: border-color 0.2s;
   }
+  .task:hover { border-color: #7a6845; }
   .task.locked { display: none; }
-  .tname { font-size: 17px; }
-  .tfun { font-size: 12px; color: var(--teal); margin-left: 10px; font-style: italic; }
-  .tinfo { font-size: 12.5px; color: var(--dim); margin-top: 5px; }
+  .tname { font-size: 19px; font-family: 'Cinzel', serif; }
+  .tfun { font-size: 14px; color: var(--teal); margin-left: 10px; font-style: italic; }
+  .tinfo { font-size: 14px; color: var(--dim); margin-top: 5px; }
   .tinfo b { color: var(--text); font-weight: normal; }
   .tbuy { display: flex; gap: 6px; }
   .buy {
-    font: inherit; font-size: 14px; padding: 9px 12px; cursor: pointer; min-width: 120px;
-    background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 9px;
+    font: inherit; font-size: 15px; padding: 9px 12px; cursor: pointer; min-width: 120px;
+    background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 4px;
+    font-family: 'Cinzel', serif;
   }
-  .buy .c { display: block; font-size: 12px; color: var(--gold); }
+  .buy .c { display: block; font-size: 13px; color: var(--gold); font-family: 'Crimson Text', serif; margin-top: 2px;}
   .buy:disabled { opacity: .45; cursor: not-allowed; }
-  .buy:not(:disabled):hover { border-color: var(--gold2); }
+  .buy:not(:disabled):hover { border-color: var(--gold2); background: #372b44; }
   .max { min-width: 0; padding: 9px 10px; }
-  .milebar { height: 4px; background: #0a0c1a; border-radius: 3px; margin-top: 7px; overflow: hidden; }
+  .milebar { height: 4px; background: #0a080d; border-radius: 3px; margin-top: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
   .milebar > div { height: 100%; background: var(--gold2); width: 0; }
 
-  .toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .toolbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
   .small {
-    font: inherit; font-size: 13px; padding: 7px 12px; cursor: pointer;
-    background: var(--panel); color: var(--dim); border: 1px solid var(--line); border-radius: 8px;
+    font: inherit; font-size: 14px; padding: 8px 14px; cursor: pointer;
+    background: var(--panel); color: var(--dim); border: 1px solid var(--line); border-radius: 4px;
+    font-family: 'Cinzel', serif;
   }
   .small:hover { color: var(--text); border-color: var(--gold2); }
 
-  .turner-hero { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-  .turner-hero h2 { margin: 0 0 6px; font-weight: normal; color: var(--gold); font-size: 20px; }
-  .turner-hero p { margin: 6px 0; color: var(--dim); font-size: 14px; line-height: 1.5; }
+  .turner-hero { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 20px; margin-bottom: 12px; }
+  .turner-hero h2 { margin: 0 0 8px; font-weight: normal; color: var(--gold); font-size: 24px; letter-spacing: 1px; }
+  .turner-hero p { margin: 8px 0; color: var(--dim); font-size: 16px; line-height: 1.5; }
   .big { color: var(--gold); font-size: 22px; }
   .rewind {
-    margin-top: 10px; padding: 12px 20px; font: inherit; font-size: 16px; cursor: pointer;
+    margin-top: 14px; padding: 12px 24px; font: inherit; font-size: 17px; cursor: pointer;
     background: linear-gradient(180deg, #3a2f12, #2a220d); color: var(--gold);
-    border: 1px solid var(--gold2); border-radius: 10px;
+    border: 1px solid var(--gold2); border-radius: 4px; font-family: 'Cinzel', serif; letter-spacing: 1px;
   }
   .rewind:disabled { opacity: .4; cursor: not-allowed; }
 
   .upg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
   .upg {
-    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px;
     text-align: left; font: inherit; color: var(--text); cursor: pointer;
   }
-  .upg .n { color: var(--gold); font-size: 15px; }
-  .upg .d { color: var(--dim); font-size: 12.5px; margin: 4px 0 6px; line-height: 1.4; }
-  .upg .c { font-size: 12.5px; color: var(--teal); }
-  .upg.owned { border-color: var(--teal); opacity: .8; cursor: default; }
+  .upg .n { color: var(--gold); font-size: 17px; font-family: 'Cinzel', serif; }
+  .upg .d { color: var(--dim); font-size: 14.5px; margin: 6px 0 8px; line-height: 1.4; }
+  .upg .c { font-size: 13.5px; color: var(--teal); font-style: italic; }
+  .upg.owned { border-color: var(--teal); opacity: .8; cursor: default; background: rgba(59, 158, 130, 0.05); }
   .upg.cant { opacity: .55; cursor: not-allowed; }
 
-  .log { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-top: 12px; }
-  .log h3 { margin: 0 0 6px; font-weight: normal; font-size: 14px; color: var(--dim); text-transform: uppercase; letter-spacing: .12em; }
-  .log div { font-size: 13px; color: var(--dim); margin: 3px 0; }
+  .log { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; margin-top: 14px; }
+  .log h3 { margin: 0 0 8px; font-weight: normal; font-size: 16px; color: var(--dim); font-family: 'Cinzel', serif; letter-spacing: .12em; }
+  .log div { font-size: 15px; color: var(--dim); margin: 4px 0; }
 
-  footer { text-align: center; color: var(--dim); font-size: 12px; margin-top: 26px; }
+  footer { text-align: center; color: var(--dim); font-size: 14px; margin-top: 30px; font-style: italic; }
   .hidden { display: none !important; }
 
   #flash {
-    position: fixed; inset: 0; z-index: 50; background: #060814; display: flex;
+    position: fixed; inset: 0; z-index: 50; background: #08050a; display: flex;
     align-items: center; justify-content: center; flex-direction: column; opacity: 0; pointer-events: none;
     transition: opacity .6s; text-align: center; padding: 20px;
   }
   #flash.on { opacity: 1; pointer-events: all; }
   #flash .rw {
     width: 120px; height: 120px; border: 3px solid var(--gold); border-radius: 50%; position: relative; margin-bottom: 22px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
   }
   #flash .rw::before { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 46px; margin-top: -46px; background: var(--gold); transform-origin: 50% 100%; animation: spinback .6s linear infinite; }
   #flash .rw::after { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 30px; margin-top: -30px; background: var(--gold); transform-origin: 50% 100%; animation: spinback 7.2s linear infinite; }
   @keyframes spinback { to { transform: rotate(-360deg); } }
-  #flash .msg { color: var(--gold); font-size: 20px; font-style: italic; }
+  #flash .msg { color: var(--gold); font-size: 24px; font-style: italic; font-family: 'Crimson Text', serif; }
 
   .toast {
     position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
     background: var(--panel2); border: 1px solid var(--gold2); color: var(--text);
-    padding: 9px 16px; border-radius: 16px; max-width: 90vw; text-align: center; font-size: 13px; z-index: 40; opacity: 0; transition: opacity .3s; pointer-events: none;
+    padding: 12px 20px; border-radius: 4px; max-width: 90vw; text-align: center; font-size: 15px; z-index: 40; opacity: 0; transition: opacity .3s; pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5); font-family: 'Crimson Text', serif;
   }
   .toast.on { opacity: 1; }
 
@@ -175,33 +172,32 @@
     .tbuy { width: 100%; }
     .buy:not(.max) { flex: 1; }
     .bank { font-size: 34px; }
-    h1 { font-size: 28px; }
+    h1 { font-size: 30px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Time</h1>
-    <div class="tagline">You never seem to have enough time, go ahead and buy yourself some</div>
+    <h1>TIME</h1>
+    <div class="tagline">You never seem to have enough time, go ahead and conjure some</div>
   </header>
 
   <section class="hero">
-    <div class="clockface"></div>
     <div class="bank mono"><span id="bank">0</span><small id="bankunit">Seconds Bought</small></div>
     <div class="rate mono" id="rate"></div>
-    <button class="waitbtn" id="wait">Wait Around<span class="waitnote" id="waitnote">+1 second. Riveting.</span></button>
+    <button class="waitbtn" id="wait">Wait Around<span class="waitnote" id="waitnote">+1 second. Magical.</span></button>
   </section>
 
   <div class="stats">
     <div class="stat"><div class="k">Fun Level</div><div class="v" id="funv">&ndash;</div><div class="funbar"><div id="funbarfill"></div></div></div>
     <div class="stat"><div class="k">This Timeline</div><div class="v mono" id="realclock">0:00</div></div>
-    <div class="stat" id="turnstat"><div class="k">Wisdom Bonus</div><div class="v mono" id="turnbonus">&times;1</div></div>
+    <div class="stat" id="turnstat"><div class="k">Arcane Bonus</div><div class="v mono" id="turnbonus">&times;1</div></div>
   </div>
 
   <div class="tabs">
     <button class="tab active" data-tab="tasks">How You Spend It</button>
-    <button class="tab hidden" data-tab="turner" id="turnertab">Time Turner <span class="badge" id="turnerbadge"></span></button>
+    <button class="tab hidden" data-tab="turner" id="turnertab">Chronos Amulet <span class="badge" id="turnerbadge"></span></button>
   </div>
 
   <section id="tab-tasks">
@@ -213,8 +209,8 @@
 
   <section id="tab-turner" class="hidden">
     <div class="turner-hero">
-      <h2>The Time Turner</h2>
-      <p id="turnerlore">A small hourglass on a golden chain, the kind of thing that shouldn't exist. Let the sand run the other way and you'll be back at the start of the day, keeping everything you've learned. That is Wisdom, and it lets you do things differently this time.</p>
+      <h2>The Chronos Amulet</h2>
+      <p id="turnerlore">An enchanted hourglass on a golden chain, radiating ancient magic. Let the enchanted sand run backward and you'll return to the start of the day, retaining everything you've learned. That is Arcane Wisdom, and it allows you to shape reality differently this time.</p>
       <p>Wisdom: <span class="big mono" id="turnerhave">0</span> &nbsp;·&nbsp; Lifetime rewinds: <span class="mono" id="rewinds">0</span></p>
       <p id="turnergain"></p>
       <button class="rewind" id="rewind" disabled>Turn Back Time</button>
@@ -223,82 +219,67 @@
     <div class="log"><h3>Timelines</h3><div id="timelines"></div></div>
   </section>
 
-  <div class="toolbar" style="margin-top:22px;justify-content:center">
+  <div class="toolbar" style="margin-top:24px;justify-content:center">
     <button class="small" id="save">Save</button>
     <button class="small" id="export">Export</button>
     <button class="small" id="import">Import</button>
-    <button class="small" id="hardreset">Wipe Everything</button>
+    <button class="small" id="hardreset">Reset</button>
   </div>
   <footer>An incremental game about wasting less time. How ironic.</footer>
 </div>
 
-<div id="flash"><div class="rw"></div><div class="msg" id="flashmsg">Rewinding&hellip;</div></div>
+<div id="flash"><div class="rw"></div><div class="msg" id="flashmsg">Rewinding the sands of time&hellip;</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 (() => {
 'use strict';
 
-/* ------------------------------------------------------------------ data */
+/* ------------------------------------------------------------------ config & data */
 
-const FUN_NAMES = ['', 'Deadly Dull', 'Tolerable', 'Pretty Good', 'Great Fun', 'Total Flow'];
+const SAVE_KEY = 'time-incremental-v2';
+const FUN_NAMES = ['', 'Mind-Numbing', 'Passable', 'Quite Magical', 'Bewitching', 'Absolute Enchantment'];
 
-// Every task makes Time directly: one unit makes `rate` seconds per second.
-// Each purchase raises that task's next cost by `mult`, and every 10th purchase
-// doubles its output. Cost climbs faster than output, so the wait for the next
-// upgrade keeps lengthening, and Wisdom is what makes up the difference.
 const TASKS = [
-  { name: 'Watch Paint Dry',           fun: 1, cost: 30,     mult: 1.22, rate: 0.3 },
-  { name: 'Queue at the Post Office',  fun: 1, cost: 500,    mult: 1.28, rate: 1.5 },
-  { name: 'Do Your Tax Return',        fun: 2, cost: 1.5e4,  mult: 1.34, rate: 8 },
-  { name: 'Tidy the Garage',           fun: 2, cost: 6e5,    mult: 1.40, rate: 40 },
-  { name: 'Play a Board Game',         fun: 3, cost: 3e7,    mult: 1.46, rate: 220 },
-  { name: 'Dance in the Kitchen',      fun: 4, cost: 2e9,    mult: 1.52, rate: 1200 },
-  { name: 'Binge Your Favourite Show', fun: 4, cost: 2e11,   mult: 1.58, rate: 6500 },
-  { name: 'Lose Yourself in a Hobby',  fun: 5, cost: 3e13,   mult: 1.64, rate: 36000 },
+  { name: 'Polish Brass Cauldrons',    fun: 1, cost: 30,     mult: 1.22, rate: 0.3 },
+  { name: 'Queue for the Owl Post',    fun: 1, cost: 500,    mult: 1.28, rate: 1.5 },
+  { name: 'Write a Runes Essay',       fun: 2, cost: 1.5e4,  mult: 1.34, rate: 8 },
+  { name: 'De-Gnome the Garden',       fun: 2, cost: 6e5,    mult: 1.40, rate: 40 },
+  { name: 'Play Enchanted Chess',      fun: 3, cost: 3e7,    mult: 1.46, rate: 220 },
+  { name: 'Attend a Magical Feast',    fun: 4, cost: 2e9,    mult: 1.52, rate: 1200 },
+  { name: 'Spectate a Broom Tournament', fun: 4, cost: 2e11, mult: 1.58, rate: 6500 },
+  { name: 'Master an Ancient Spell',   fun: 5, cost: 3e13,   mult: 1.64, rate: 36000 },
 ];
 
-const CLICKS_REQUIRED = 30;        // manual waits needed before the first task can be bought (lifetime, one-off)
-const WISDOM_THRESHOLD = 604800;   // one week of Time bought in a single timeline earns the first Wisdom
-const WISDOM_COEF = 2;             // Wisdom earned = COEF * (total / THRESHOLD) ^ EXP
+const CLICKS_REQUIRED = 30;        
+const WISDOM_THRESHOLD = 604800;   
+const WISDOM_COEF = 2;             
 const WISDOM_EXP = 0.45;
-const WISDOM_BONUS = 0.15;         // each Wisdom earned permanently adds this to your multiplier
-const DISCOVER_AT = 0.5;           // the Time Turner is found at this fraction of the threshold
-const OFFLINE_EFFICIENCY = 0.5;    // time passing while you are away is worth half as much
+const WISDOM_BONUS = 0.15;         
+const DISCOVER_AT = 0.5;           
+const OFFLINE_EFFICIENCY = 0.5;    
 const OFFLINE_CAP = 2 * 3600;
 
 const UPGRADES = [
-  { id: 'head',    name: 'Head Start',           cost: 1,  desc: 'Every timeline begins with 5 Watch Paint Dry already at work.' },
-  { id: 'click',   name: 'Muscle Memory',        cost: 2,  desc: 'You have waited around before. Waiting is worth ×5.' },
-  { id: 'company', name: 'Good Company',         cost: 3,  desc: 'The fun tasks (Board Game and beyond) are ×3 as effective. Time flies.' },
+  { id: 'head',    name: 'Head Start',         cost: 1,  desc: 'Every timeline begins with 5 Polish Brass Cauldrons already at work.' },
+  { id: 'click',   name: 'Muscle Memory',      cost: 2,  desc: 'You have waited around before. Waiting is worth ×5.' },
+  { id: 'company', name: 'Good Company',       cost: 3,  desc: 'The fun tasks (Enchanted Chess and beyond) are ×3 as effective. Time flies on a broomstick.' },
   { id: 'skip',    name: 'Skip the Boring Bits', cost: 4,  desc: 'The three dullest tasks cost 50% less. You learned to bring a book.' },
-  { id: 'stretch', name: 'Stretch the Hour',     cost: 6,  desc: 'All the time you buy is ×1.5. An afternoon lasts forever.' },
-  { id: 'wind',    name: 'Second Wind',          cost: 7,  desc: 'Each time you Wait Around you also gain 2% of what you make every second.' },
-  { id: 'seize',   name: 'Seize the Day',        cost: 8,  desc: 'Task milestones arrive every 8 purchases instead of 10.' },
-  { id: 'paradox', name: 'Benevolent Paradox',   cost: 12, desc: 'You meet yourself coming the other way. Wisdom earned ×1.5.' },
+  { id: 'stretch', name: 'Stretch the Hour',   cost: 6,  desc: 'All the time you buy is ×1.5. An afternoon lasts forever.' },
+  { id: 'wind',    name: 'Second Wind',        cost: 7,  desc: 'Each time you Wait Around you also gain 2% of what you make every second.' },
+  { id: 'seize',   name: 'Seize the Day',      cost: 8,  desc: 'Task milestones arrive every 8 purchases instead of 10.' },
+  { id: 'paradox', name: 'Benevolent Paradox', cost: 12, desc: 'You meet yourself coming the other way. Wisdom earned ×1.5.' },
 ];
 
-const SAVE_KEY = 'time-incremental-v2';
-
-/* ------------------------------------------------------------------ state */
+/* ------------------------------------------------------------------ state management */
 
 function freshState() {
   return {
-    time: 0,
-    runTotal: 0,
-    lifeTotal: 0,
-    amt: TASKS.map(() => 0),
-    bought: TASKS.map(() => 0),
-    wisdom: 0,
-    lifeWisdom: 0,
-    rewinds: 0,
-    upg: {},
-    realRun: 0,      // seconds of real time in this timeline
-    found: false,    // has the Time Turner been discovered?
-    unseen: false,   // discovered but tab not opened yet
-    clicks: 0,
-    timelines: [],   // [{n, total, wisdom}]
-    last: Date.now(),
+    time: 0, runTotal: 0, lifeTotal: 0,
+    amt: TASKS.map(() => 0), bought: TASKS.map(() => 0),
+    wisdom: 0, lifeWisdom: 0, rewinds: 0, upg: {},
+    realRun: 0, found: false, unseen: false, clicks: 0,
+    timelines: [], last: Date.now(),
   };
 }
 let S = freshState();
@@ -316,36 +297,40 @@ function tierMult(i) {
   if (has('company') && i >= 4) m *= 3;
   return m;
 }
+
 function costOf(i, bought = S.bought[i]) {
   let c = TASKS[i].cost * Math.pow(TASKS[i].mult, bought);
   if (has('skip') && i <= 2) c *= 0.5;
   return c;
 }
-function productionPerSec() { // Time per second, right now
+
+function productionPerSec() { 
   let p = 0;
   for (let i = 0; i < TASKS.length; i++) p += S.amt[i] * tierMult(i) * TASKS[i].rate;
   return p * globalMult();
 }
+
 function funAverage() {
   let n = 0, s = 0;
   for (let i = 0; i < TASKS.length; i++) { n += S.bought[i]; s += S.bought[i] * TASKS[i].fun; }
   return n ? s / n : 1;
 }
+
 function wisdomGain() {
   if (S.runTotal < WISDOM_THRESHOLD) return 0;
   let g = Math.floor(WISDOM_COEF * Math.pow(S.runTotal / WISDOM_THRESHOLD, WISDOM_EXP));
-  if (has('paradox')) g = Math.floor(g * 1.5);
-  return Math.max(g, 1);
+  return Math.max(has('paradox') ? Math.floor(g * 1.5) : g, 1);
 }
 
-/* ------------------------------------------------------------------ simulation */
+/* ------------------------------------------------------------------ simulation & actions */
 
 function step(dt) {
   const t = productionPerSec() * dt;
   S.time += t; S.runTotal += t; S.lifeTotal += t;
   S.realRun += dt;
 }
-function catchUp(secs) { // time you were not watching is worth less
+
+function catchUp(secs) { 
   secs = Math.min(secs, OFFLINE_CAP);
   const t = productionPerSec() * secs * OFFLINE_EFFICIENCY;
   S.time += t; S.runTotal += t; S.lifeTotal += t;
@@ -355,20 +340,26 @@ function catchUp(secs) { // time you were not watching is worth less
 function checkDiscovery() {
   if (S.found || S.runTotal < WISDOM_THRESHOLD * DISCOVER_AT) return;
   S.found = true; S.unseen = true;
-  toast('Behind the old paint tins, something glints: a Time Turner. Have a look.', 7000);
+  toast('Hidden in an ancient tome, something glints: a Chronos Amulet. Have a look.', 7000);
 }
 
 function gated(i) { return i === 0 && S.clicks < CLICKS_REQUIRED; }
-function buy(i, silent) {
+
+function buy(i) {
   const c = costOf(i);
   if (gated(i) || S.time < c) return false;
   S.time -= c; S.bought[i]++; S.amt[i]++;
   return true;
 }
+
 function buyMax(i) {
   let n = 0;
   while (n < 500 && buy(i)) n++;
-  return n;
+}
+
+function maxAll() { 
+  for (let i = TASKS.length - 1; i >= 0; i--) buyMax(i); 
+  render(); 
 }
 
 /* ------------------------------------------------------------------ formatting */
@@ -382,32 +373,32 @@ function fmt(n, d = 2) {
   const ex = Math.floor(Math.log10(n));
   return (n / Math.pow(10, ex)).toFixed(2) + 'e' + ex;
 }
+
 function fmtClock(sec) {
+  if (!isFinite(sec)) return '0:00';
   sec = Math.floor(sec);
   const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
   return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0');
 }
-const TIME_UNITS = [
-  ['second', 1], ['minute', 60], ['hour', 3600], ['day', 86400], ['week', 604800], ['year', 52 * 604800],
-];
+
+const TIME_UNITS = [['second', 1], ['minute', 60], ['hour', 3600], ['day', 86400], ['week', 604800], ['year', 52 * 604800]];
 function timeParts(sec) {
+  if (!isFinite(sec) || isNaN(sec)) return ["0", "second"];
   let u = 0;
   while (u < TIME_UNITS.length - 1 && sec >= TIME_UNITS[u + 1][1]) u++;
   const v = sec / TIME_UNITS[u][1];
-  const shown = fmt(v, 2);
-  const one = Math.abs(v - 1) < 0.005;
-  return [shown, TIME_UNITS[u][0] + (one ? '' : 's')];
+  return [fmt(v, 2), TIME_UNITS[u][0] + (Math.abs(v - 1) < 0.005 ? '' : 's')];
 }
 function fmtTime(sec) { const [v, u] = timeParts(sec); return v + ' ' + u; }
 
-/* ------------------------------------------------------------------ DOM build */
+/* ------------------------------------------------------------------ DOM build & references */
 
 const $ = id => document.getElementById(id);
 const taskEls = [];
+const upgEls = [];
 
-function buildTasks() {
-  const host = $('tasks');
-  host.innerHTML = '';
+function buildDOM() {
+  const tHost = $('tasks');
   TASKS.forEach((t, i) => {
     const el = document.createElement('div');
     el.className = 'task locked';
@@ -422,65 +413,66 @@ function buildTasks() {
         <button class="buy max">Max</button>
       </div>`;
     const [b1, bm] = el.querySelectorAll('button');
-    b1.onclick = () => { buy(i); renderAll(); };
-    bm.onclick = () => { buyMax(i); renderAll(); };
-    host.appendChild(el);
+    b1.onclick = () => { buy(i); render(); };
+    bm.onclick = () => { buyMax(i); render(); };
+    tHost.appendChild(el);
     taskEls.push({ el, lbl: el.querySelector('.lbl'), info: el.querySelector('.tinfo'), c: el.querySelector('.c'), b1, bm, bar: el.querySelector('.milebar > div') });
   });
-}
 
-function buildUpgrades() {
-  const host = $('upgs');
-  host.innerHTML = '';
+  const uHost = $('upgs');
   UPGRADES.forEach(u => {
     const b = document.createElement('button');
     b.className = 'upg';
-    b.dataset.id = u.id;
     b.innerHTML = `<div class="n">${u.name}</div><div class="d">${u.desc}</div><div class="c"></div>`;
     b.onclick = () => {
       if (has(u.id) || S.wisdom < u.cost) return;
       S.wisdom -= u.cost; S.upg[u.id] = true;
       toast(u.name + ' learned.');
-      save(true); renderAll();
+      save(true); render();
     };
-    host.appendChild(b);
+    uHost.appendChild(b);
+    upgEls.push({ el: b, id: u.id, cost: u.cost, c: b.querySelector('.c') });
   });
 }
 
 /* ------------------------------------------------------------------ render */
 
 function render() {
-  const bp = timeParts(S.time);
-  $('bank').textContent = bp[0];
-  $('bankunit').textContent = bp[1].charAt(0).toUpperCase() + bp[1].slice(1) + ' Bought';
+  if (isNaN(S.time)) S.time = 0;
+
+  const [tAmt, tUnit] = timeParts(S.time);
+  $('bank').textContent = tAmt;
+  $('bankunit').textContent = tUnit.charAt(0).toUpperCase() + tUnit.slice(1) + ' Bought';
   $('rate').textContent = '+' + fmt(productionPerSec(), 2) + ' seconds per second';
-  $('waitnote').textContent = '+' + fmt(clickValue(), 1) + (clickValue() === 1 ? ' second. Riveting.' : ' seconds.');
+  $('waitnote').textContent = '+' + fmt(clickValue(), 1) + (clickValue() === 1 ? ' second. Magical.' : ' seconds.');
 
   const f = funAverage();
   $('funv').textContent = S.bought.some(b => b) ? FUN_NAMES[Math.round(f)] : '–';
   $('funbarfill').style.width = ((f - 1) / 4 * 100) + '%';
   $('realclock').textContent = fmtClock(S.realRun);
+  
   $('turnertab').classList.toggle('hidden', !S.found);
   $('turnstat').classList.toggle('hidden', !S.found);
   $('turnbonus').textContent = '×' + fmt(wisdomMult(), 2) + (has('stretch') ? ' (×1.5 more)' : '');
 
   taskEls.forEach((t, i) => {
-    const unlocked = i === 0 || S.bought[i] > 0 || S.time >= costOf(i) * 0.5 || (i > 0 && S.bought[i - 1] > 0 && S.time >= costOf(i) * 0.1);
+    // USING S.runTotal INSTEAD OF S.time ENSURES UNLOCKED ITEMS NEVER DISAPPEAR
+    const unlocked = i === 0 || S.bought[i] > 0 || S.runTotal >= costOf(i) * 0.5 || (i > 0 && S.bought[i - 1] > 0 && S.runTotal >= costOf(i) * 0.1);
     t.el.classList.toggle('locked', !unlocked);
     if (!unlocked) return;
+    
     const c = costOf(i);
     const g = gated(i);
-    t.b1.disabled = g || S.time < c;
-    t.bm.disabled = g || S.time < c;
+    t.b1.disabled = t.bm.disabled = g || S.time < c;
     t.lbl.textContent = g ? 'Locked' : 'Buy';
     t.c.textContent = g ? 'Wait Around ' + S.clicks + '/' + CLICKS_REQUIRED : fmtTime(c);
+    
     const per = tierMult(i) * TASKS[i].rate * globalMult();
     const every = mileEvery();
-    t.info.innerHTML = `Owned <b class="mono">${fmt(S.amt[i], 1)}</b> · Each makes <b class="mono">${fmt(per, 2)}</b>/s · Together <b class="mono">${fmt(per * S.amt[i], 2)}</b>/s · <b>×${fmt(tierMult(i), 1)}</b> · Next ×2 in ${every - S.bought[i] % every}`;
+    t.info.innerHTML = `Owned: <b class="mono">${fmt(S.amt[i], 1)}</b> &middot; Yield: <b class="mono">${fmt(per, 2)}</b>/s (Total: <b class="mono">${fmt(per * S.amt[i], 2)}</b>/s) &middot; Multi: <b class="mono">${fmt(tierMult(i), 1)}x</b>`;
     t.bar.style.width = ((S.bought[i] % every) / every * 100) + '%';
   });
 
-  // prestige tab
   const g = wisdomGain();
   $('turnerhave').textContent = S.wisdom;
   $('rewinds').textContent = S.rewinds;
@@ -488,26 +480,23 @@ function render() {
   $('turnergain').innerHTML = g >= 1
     ? `Turning back time now would grant <span class="big mono">${g}</span> Wisdom. (Based on <span class="mono">${fmtTime(S.runTotal)}</span> bought this timeline.)`
     : `Buy <span class="mono">${fmtTime(WISDOM_THRESHOLD)}</span> in one timeline to earn your first Wisdom. (Currently ${fmtTime(S.runTotal)}.)`;
-  document.querySelectorAll('.upg').forEach(b => {
-    const u = UPGRADES.find(x => x.id === b.dataset.id);
+  
+  upgEls.forEach(u => {
     const owned = has(u.id);
-    b.classList.toggle('owned', owned);
-    b.classList.toggle('cant', !owned && S.wisdom < u.cost);
-    b.querySelector('.c').textContent = owned ? 'Learned' : u.cost + ' Wisdom';
+    u.el.classList.toggle('owned', owned);
+    u.el.classList.toggle('cant', !owned && S.wisdom < u.cost);
+    u.c.textContent = owned ? 'Learned' : u.cost + ' Wisdom';
   });
-  const affordable = UPGRADES.some(u => !has(u.id) && S.wisdom >= u.cost);
-  $('turnerbadge').textContent = (g >= 1 || affordable || S.unseen) ? '●' : '';
-
-  const tl = $('timelines');
-  tl.innerHTML = S.timelines.length
+  
+  $('turnerbadge').textContent = (g >= 1 || upgEls.some(u => !has(u.id) && S.wisdom >= u.cost) || S.unseen) ? '●' : '';
+  $('timelines').innerHTML = S.timelines.length
     ? S.timelines.slice(-6).reverse().map(x => `Timeline ${x.n}: Bought ${fmtTime(x.total)} → +${x.wisdom} Wisdom`).join('<br>')
     : 'No other timelines yet. This is the first, and so far the only, you.';
 }
-function renderAll() { render(); }
 
-function toast(msg, ms) {
+function toast(msg, ms = 1800) {
   const t = $('toast'); t.textContent = msg; t.classList.add('on');
-  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), ms || 1800);
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), ms);
 }
 
 /* ------------------------------------------------------------------ prestige */
@@ -516,7 +505,7 @@ const REWIND_LINES = [
   'The hourglass spins on its chain. The day unwinds.',
   'The sun rises in the west, briefly.',
   'You wake up knowing exactly what is going to happen. Mostly.',
-  'This time, you bring snacks.',
+  'This time, you bring enchanted snacks.',
 ];
 
 let rewinding = false;
@@ -524,19 +513,21 @@ function rewind() {
   const g = wisdomGain();
   if (g < 1 || rewinding) return;
   rewinding = true;
-  const f = $('flash');
+  
   $('flashmsg').textContent = REWIND_LINES[Math.floor(Math.random() * REWIND_LINES.length)];
-  f.classList.add('on');
+  $('flash').classList.add('on');
+  
   setTimeout(() => {
     S.timelines.push({ n: S.rewinds + 1, total: S.runTotal, wisdom: g });
     S.wisdom += g; S.lifeWisdom += g; S.rewinds++;
-    S.time = 0;
-    S.runTotal = 0; S.amt = TASKS.map((_, i) => (i === 0 && has('head')) ? 5 : 0); S.bought = TASKS.map(() => 0);
-    S.realRun = 0;
+    S.time = S.runTotal = S.realRun = 0;
+    S.amt = TASKS.map((_, i) => (i === 0 && has('head')) ? 5 : 0);
+    S.bought = TASKS.map(() => 0);
     rewinding = false;
-    save(true); renderAll();
+    save(true); render();
   }, 1200);
-  setTimeout(() => f.classList.remove('on'), 1900);
+  
+  setTimeout(() => $('flash').classList.remove('on'), 1900);
 }
 
 /* ------------------------------------------------------------------ save / load */
@@ -546,48 +537,49 @@ function save(quiet) {
     S.last = Date.now();
     localStorage.setItem(SAVE_KEY, JSON.stringify(S));
     if (!quiet) toast('Saved.');
-  } catch (e) { if (!quiet) toast('Could not save (storage blocked?).'); }
+  } catch (e) { if (!quiet) toast('Could not save (magic blocked?).'); }
 }
+
 function load() {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return;
-    const o = JSON.parse(raw);
-    S = Object.assign(freshState(), o);
+    S = Object.assign(freshState(), JSON.parse(raw));
     while (S.amt.length < TASKS.length) { S.amt.push(0); S.bought.push(0); }
     if (S.rewinds > 0 || S.lifeWisdom > 0) S.found = true;
   } catch (e) { S = freshState(); }
 }
+
 function offline() {
   const secs = (Date.now() - S.last) / 1000;
   if (secs < 5) return;
   const gained = catchUp(secs);
-  if (gained > 0) toast('While you were away: +' + fmtTime(gained), 4000);
+  if (gained > 0 && !isNaN(gained)) toast('While you were studying: +' + fmtTime(gained), 4000);
 }
 
-/* ------------------------------------------------------------------ wiring */
+/* ------------------------------------------------------------------ wiring & loop */
 
-// stop the button taking focus on mouse-down: no focus ring flicker, and Space keeps working
-$('wait').onmousedown = e => e.preventDefault();
-$('wait').ondblclick = e => e.preventDefault();
-$('wait').onclick = () => {
-  const v = clickValue();
-  S.time += v; S.runTotal += v; S.lifeTotal += v; S.clicks++;
-  render();
-};
-$('maxall').onclick = maxAll;
-function maxAll() { for (let i = TASKS.length - 1; i >= 0; i--) buyMax(i); render(); }
 function twoStep(btn, idleText, armedText, fn) {
   let armed = false, h;
   btn.onclick = () => {
     if (!armed) {
       armed = true; btn.textContent = armedText;
       h = setTimeout(() => { armed = false; btn.textContent = idleText; }, 4000);
-      return;
+    } else {
+      armed = false; clearTimeout(h); btn.textContent = idleText; fn();
     }
-    armed = false; clearTimeout(h); btn.textContent = idleText; fn();
   };
 }
+
+const wBtn = $('wait');
+wBtn.onmousedown = wBtn.ondblclick = e => e.preventDefault();
+wBtn.onclick = () => {
+  const v = clickValue();
+  if(!isNaN(v)) { S.time += v; S.runTotal += v; S.lifeTotal += v; S.clicks++; }
+  render();
+};
+
+$('maxall').onclick = maxAll;
 twoStep($('rewind'), 'Turn Back Time', 'Reset This Timeline? Click Again', rewind);
 $('save').onclick = () => save(false);
 $('export').onclick = () => {
@@ -599,16 +591,14 @@ $('import').onclick = () => {
   const s = prompt('Paste a save string:');
   if (!s) return;
   try {
-    const o = JSON.parse(decodeURIComponent(escape(atob(s.trim()))));
-    S = Object.assign(freshState(), o);
+    S = Object.assign(freshState(), JSON.parse(decodeURIComponent(escape(atob(s.trim())))));
     S.last = Date.now();
     if (S.rewinds > 0 || S.lifeWisdom > 0) S.found = true;
-    save(true); renderAll(); toast('Save loaded.');
+    save(true); render(); toast('Save loaded.');
   } catch (e) { toast('That does not look like a save.'); }
 };
-twoStep($('hardreset'), 'Wipe Everything', 'Wipe It All? Click Again', () => {
-  S = freshState(); save(true); renderAll();
-});
+twoStep($('hardreset'), 'Reset', 'Reset It All? Click Again', () => { S = freshState(); save(true); render(); });
+
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
   if (b.dataset.tab === 'turner') S.unseen = false;
   document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === b));
@@ -616,15 +606,13 @@ document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
   $('tab-turner').classList.toggle('hidden', b.dataset.tab !== 'turner');
   render();
 });
+
 document.addEventListener('keydown', e => {
   if (e.key === 'm' || e.key === 'M') maxAll();
-  if (e.code === 'Space' && document.activeElement === document.body) { e.preventDefault(); $('wait').click(); }
+  if (e.code === 'Space' && document.activeElement === document.body) { e.preventDefault(); wBtn.click(); }
 });
 
-/* ------------------------------------------------------------------ main loop */
-
-buildTasks();
-buildUpgrades();
+buildDOM();
 load();
 offline();
 checkDiscovery();
@@ -632,20 +620,16 @@ render();
 
 let lastFrame = performance.now(), saveClock = 0;
 setInterval(() => {
-  const now = performance.now();
-  const real = (now - lastFrame) / 1000;
-  const dt = Math.min(real, 1);
+  const now = performance.now(), real = (now - lastFrame) / 1000, dt = Math.min(real, 1);
   lastFrame = now;
   step(dt);
-  if (real > 1) catchUp(real - 1); // tab was throttled or asleep
+  if (real > 1) catchUp(real - 1); 
   checkDiscovery();
-  saveClock += dt;
-  if (saveClock > 10) { saveClock = 0; save(true); }
+  if ((saveClock += dt) > 10) { saveClock = 0; save(true); }
   render();
 }, 100);
 
 window.addEventListener('beforeunload', () => save(true));
-// expose a tiny debug handle for tinkering in the console
 window.__time = { get S() { return S; }, add(n) { S.time += n; S.runTotal += n; render(); }, buy, step, costOf, productionPerSec };
 })();
 </script>
