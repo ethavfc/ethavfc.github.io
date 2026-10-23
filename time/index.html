@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>time</title>
+<style>
+  :root {
+    --bg: #0d1020;
+    --panel: #161a30;
+    --panel2: #1d2240;
+    --line: #2b3260;
+    --text: #e8e6f0;
+    --dim: #8f93b5;
+    --gold: #f2c35b;
+    --gold2: #b8862b;
+    --teal: #5fd1c4;
+    --pink: #ff7aa8;
+    --bad: #7d8199;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    min-height: 100vh;
+    background:
+      radial-gradient(1200px 600px at 50% -200px, #232a55 0%, transparent 70%),
+      var(--bg);
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 18px 16px 60px; }
+
+  header { text-align: center; padding: 10px 0 6px; }
+  h1 {
+    margin: 0; font-weight: normal; letter-spacing: .5em; font-size: 34px;
+    color: var(--gold); text-transform: lowercase; padding-left: .5em;
+  }
+  .tagline { color: var(--dim); font-style: italic; font-size: 14px; margin-top: 4px; }
+
+  .hero {
+    background: linear-gradient(180deg, var(--panel2), var(--panel));
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px; margin: 14px 0; text-align: center; position: relative; overflow: hidden;
+  }
+  .clockface {
+    position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; opacity: .13;
+    border: 3px solid var(--gold); border-radius: 50%;
+  }
+  .clockface::before, .clockface::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 3px; background: var(--gold);
+    transform-origin: 50% 100%; border-radius: 2px;
+  }
+  .clockface::before { height: 55px; margin-top: -55px; animation: spin 12s linear infinite; }
+  .clockface::after  { height: 38px; margin-top: -38px; animation: spin 144s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .bank { font-size: 44px; color: var(--gold); line-height: 1.1; }
+  .bank small { font-size: 16px; color: var(--dim); margin-left: 6px; }
+  .human { color: var(--teal); font-size: 14px; min-height: 20px; margin-top: 2px; }
+  .rate { color: var(--dim); font-size: 13px; margin-top: 6px; }
+
+  .waitbtn {
+    margin-top: 14px; padding: 14px 28px; font: inherit; font-size: 18px;
+    background: transparent; color: var(--text); cursor: pointer;
+    border: 1px solid var(--gold2); border-radius: 999px; transition: .12s;
+    user-select: none;
+  }
+  .waitbtn:hover { background: rgba(242,195,91,.08); }
+  .waitbtn:active { transform: scale(.97); }
+  .waitnote { display: block; font-size: 12px; color: var(--dim); font-style: italic; margin-top: 2px; }
+
+  .ticker {
+    min-height: 44px; margin: 6px 0 12px; padding: 10px 14px; text-align: center;
+    color: var(--dim); font-style: italic; font-size: 14px;
+    border-left: 2px solid var(--line); border-right: 2px solid var(--line);
+  }
+  .ticker.fun { color: var(--pink); border-color: var(--pink); }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 14px;
+  }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); }
+  .stat .v { font-size: 17px; margin-top: 2px; }
+  .funbar { height: 6px; background: #0a0c1a; border-radius: 4px; margin-top: 7px; overflow: hidden; }
+  .funbar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--bad), var(--teal), var(--pink)); transition: width .4s; }
+
+  .tabs { display: flex; gap: 6px; margin: 4px 0 10px; }
+  .tab {
+    flex: 1; padding: 10px; font: inherit; color: var(--dim); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+  }
+  .tab.active { color: var(--gold); border-color: var(--gold2); background: var(--panel2); }
+  .tab .badge { color: var(--pink); }
+
+  .task {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 8px;
+  }
+  .task.locked { display: none; }
+  .tname { font-size: 17px; }
+  .tfun { font-size: 12px; color: var(--teal); margin-left: 10px; font-style: italic; }
+  .tflav { font-size: 12.5px; color: var(--dim); font-style: italic; margin-top: 2px; }
+  .tinfo { font-size: 12.5px; color: var(--dim); margin-top: 5px; }
+  .tinfo b { color: var(--text); font-weight: normal; }
+  .tbuy { display: flex; gap: 6px; }
+  .buy {
+    font: inherit; font-size: 14px; padding: 9px 12px; cursor: pointer; min-width: 120px;
+    background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 9px;
+  }
+  .buy .c { display: block; font-size: 12px; color: var(--gold); }
+  .buy:disabled { opacity: .45; cursor: not-allowed; }
+  .buy:not(:disabled):hover { border-color: var(--gold2); }
+  .max { min-width: 0; padding: 9px 10px; }
+  .milebar { height: 4px; background: #0a0c1a; border-radius: 3px; margin-top: 7px; overflow: hidden; }
+  .milebar > div { height: 100%; background: var(--gold2); width: 0; }
+
+  .toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .small {
+    font: inherit; font-size: 13px; padding: 7px 12px; cursor: pointer;
+    background: var(--panel); color: var(--dim); border: 1px solid var(--line); border-radius: 8px;
+  }
+  .small:hover { color: var(--text); border-color: var(--gold2); }
+
+  .turner-hero { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .turner-hero h2 { margin: 0 0 6px; font-weight: normal; color: var(--gold); font-size: 20px; }
+  .turner-hero p { margin: 6px 0; color: var(--dim); font-size: 14px; line-height: 1.5; }
+  .big { color: var(--gold); font-size: 22px; }
+  .rewind {
+    margin-top: 10px; padding: 12px 20px; font: inherit; font-size: 16px; cursor: pointer;
+    background: linear-gradient(180deg, #3a2f12, #2a220d); color: var(--gold);
+    border: 1px solid var(--gold2); border-radius: 10px;
+  }
+  .rewind:disabled { opacity: .4; cursor: not-allowed; }
+
+  .upg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
+  .upg {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    text-align: left; font: inherit; color: var(--text); cursor: pointer;
+  }
+  .upg .n { color: var(--gold); font-size: 15px; }
+  .upg .d { color: var(--dim); font-size: 12.5px; margin: 4px 0 6px; line-height: 1.4; }
+  .upg .c { font-size: 12.5px; color: var(--teal); }
+  .upg.owned { border-color: var(--teal); opacity: .8; cursor: default; }
+  .upg.cant { opacity: .55; cursor: not-allowed; }
+
+  .log { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-top: 12px; }
+  .log h3 { margin: 0 0 6px; font-weight: normal; font-size: 14px; color: var(--dim); text-transform: uppercase; letter-spacing: .12em; }
+  .log div { font-size: 13px; color: var(--dim); margin: 3px 0; }
+
+  footer { text-align: center; color: var(--dim); font-size: 12px; margin-top: 26px; }
+  .hidden { display: none !important; }
+
+  #flash {
+    position: fixed; inset: 0; z-index: 50; background: #060814; display: flex;
+    align-items: center; justify-content: center; flex-direction: column; opacity: 0; pointer-events: none;
+    transition: opacity .6s; text-align: center; padding: 20px;
+  }
+  #flash.on { opacity: 1; pointer-events: all; }
+  #flash .rw {
+    width: 120px; height: 120px; border: 3px solid var(--gold); border-radius: 50%; position: relative; margin-bottom: 22px;
+  }
+  #flash .rw::before { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 46px; margin-top: -46px; background: var(--gold); transform-origin: 50% 100%; animation: spinback .6s linear infinite; }
+  #flash .rw::after { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 30px; margin-top: -30px; background: var(--gold); transform-origin: 50% 100%; animation: spinback 7.2s linear infinite; }
+  @keyframes spinback { to { transform: rotate(-360deg); } }
+  #flash .msg { color: var(--gold); font-size: 20px; font-style: italic; }
+
+  .toast {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    background: var(--panel2); border: 1px solid var(--gold2); color: var(--text);
+    padding: 9px 16px; border-radius: 999px; font-size: 13px; z-index: 40; opacity: 0; transition: opacity .3s; pointer-events: none;
+  }
+  .toast.on { opacity: 1; }
+
+  @media (max-width: 560px) {
+    .task { grid-template-columns: 1fr; }
+    .tbuy { width: 100%; }
+    .buy:not(.max) { flex: 1; }
+    .bank { font-size: 34px; }
+    h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>time</h1>
+    <div class="tagline">you never seem to have enough. let's buy some.</div>
+  </header>
+
+  <section class="hero">
+    <div class="clockface"></div>
+    <div class="bank mono"><span id="bank">0</span><small id="bankunit">seconds bought</small></div>
+    <div class="rate mono" id="rate"></div>
+    <button class="waitbtn" id="wait">Wait around<span class="waitnote" id="waitnote">+1 second. Riveting.</span></button>
+  </section>
+
+  <div class="ticker" id="ticker"></div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Fun level</div><div class="v" id="funv">&ndash;</div><div class="funbar"><div id="funbarfill"></div></div></div>
+    <div class="stat"><div class="k">This timeline</div><div class="v mono" id="realclock">0:00</div></div>
+    <div class="stat"><div class="k">Time Turner bonus</div><div class="v mono" id="turnbonus">&times;1</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="tasks">How you spend it</button>
+    <button class="tab" data-tab="turner" id="turnertab">Time Turner <span class="badge" id="turnerbadge"></span></button>
+  </div>
+
+  <section id="tab-tasks">
+    <div class="toolbar">
+      <button class="small" id="maxall">Buy max (M)</button>
+    </div>
+    <div id="tasks"></div>
+  </section>
+
+  <section id="tab-turner" class="hidden">
+    <div class="turner-hero">
+      <h2>The Time Turner</h2>
+      <p id="turnerlore">Twist it and you'll wake up at the start of the day, holding every lesson you learned. Do things differently this time.</p>
+      <p>Turners in hand: <span class="big mono" id="turnerhave">0</span> &nbsp;·&nbsp; lifetime rewinds: <span class="mono" id="rewinds">0</span></p>
+      <p id="turnergain"></p>
+      <button class="rewind" id="rewind" disabled>Turn it back</button>
+    </div>
+    <div class="upg-grid" id="upgs"></div>
+    <div class="log"><h3>Timelines</h3><div id="timelines"></div></div>
+  </section>
+
+  <div class="toolbar" style="margin-top:22px;justify-content:center">
+    <button class="small" id="save">Save</button>
+    <button class="small" id="export">Export</button>
+    <button class="small" id="import">Import</button>
+    <button class="small" id="hardreset">Wipe everything</button>
+  </div>
+  <footer>An incremental game about wasting less of it. Saves automatically to this browser.</footer>
+</div>
+
+<div id="flash"><div class="rw"></div><div class="msg" id="flashmsg">Rewinding&hellip;</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ------------------------------------------------------------------ data */
+
+const FUN_NAMES = ['', 'Deadly dull', 'Tolerable', 'Pretty good', 'Great fun', 'Total flow'];
+
+// rate: how much one unit makes per second. Tier 0 makes Time, tier n makes tier n-1.
+// That chain is what makes growth polynomial: tier k's stock grows like t^(k+1).
+const TASKS = [
+  { name: 'Watch Paint Dry',        fun: 1, cost: 10,    mult: 1.18, rate: 0.25,  flavor: 'Somehow it was only 40 seconds ago.' },
+  { name: 'Queue at the Post Office', fun: 1, cost: 250,   mult: 1.30, rate: 0.06,  flavor: 'You are number 87 in the queue.' },
+  { name: 'Do Your Tax Return',     fun: 2, cost: 8e3,    mult: 1.40, rate: 0.05,  flavor: 'Where did you put that receipt?' },
+  { name: 'Tidy the Garage',        fun: 2, cost: 4e5,    mult: 1.50, rate: 0.04,  flavor: 'Podcast on. Not bad, actually.' },
+  { name: 'Play a Board Game',      fun: 3, cost: 2.5e7,  mult: 1.60, rate: 0.035, flavor: 'Whose turn is it? Nobody knows. Nobody cares.' },
+  { name: 'Dance in the Kitchen',   fun: 4, cost: 2e9,    mult: 1.70, rate: 0.03,  flavor: 'The kettle boiled an hour ago.' },
+  { name: 'Binge Your Favourite Show', fun: 4, cost: 3e11, mult: 1.80, rate: 0.025, flavor: 'Just one more episode. It is now 4am.' },
+  { name: 'Lose Yourself in a Hobby', fun: 5, cost: 1e14,  mult: 1.90, rate: 0.02,  flavor: 'Hours are a rumour.' },
+];
+
+const TURNER_THRESHOLD = 1e6;   // total Time bought in a timeline before a turner is worth it
+const TURNER_EXP = 0.3;
+
+const UPGRADES = [
+  { id: 'head',   name: 'Head Start',            cost: 1,  desc: 'Every timeline begins with 100 seconds already in the bank.' },
+  { id: 'click',  name: 'Muscle Memory',         cost: 2,  desc: 'You have waited around before. Waiting is worth ×5.' },
+  { id: 'company',name: 'Good Company',          cost: 3,  desc: 'The fun tasks (Board Game and beyond) are ×3 as effective. Time flies.' },
+  { id: 'autoD',  name: 'Autopilot: The Dull',   cost: 4,  desc: 'Automatically buys Paint Dry and the Post Office so you never think about them again.' },
+  { id: 'skip',   name: 'Skip the Boring Bits',  cost: 5,  desc: 'The three dullest tasks cost 50% less. You learned to bring a book.' },
+  { id: 'stretch',name: 'Stretch the Hour',      cost: 6,  desc: 'All time you buy is doubled. An afternoon lasts forever.' },
+  { id: 'seize',  name: 'Seize the Day',         cost: 8,  desc: 'Task milestones arrive every 8 purchases instead of 10.' },
+  { id: 'autoF',  name: 'Autopilot: The Fun',    cost: 10, desc: 'Automatically buys every task from Tidy the Garage onward.' },
+  { id: 'paradox',name: 'Benevolent Paradox',    cost: 12, desc: 'You meet yourself coming the other way. Turners earned ×1.5.' },
+];
+
+const SAVE_KEY = 'time-incremental-v1';
+
+/* ------------------------------------------------------------------ state */
+
+function freshState() {
+  return {
+    time: 10,
+    runTotal: 0,
+    lifeTotal: 0,
+    amt: TASKS.map(() => 0),
+    bought: TASKS.map(() => 0),
+    turners: 0,
+    lifeTurners: 0,
+    rewinds: 0,
+    upg: {},
+    realRun: 0,      // seconds of real time in this timeline
+    clicks: 0,
+    timelines: [],   // [{n, total, turners}]
+    last: Date.now(),
+  };
+}
+let S = freshState();
+
+/* ------------------------------------------------------------------ maths */
+
+const has = id => !!S.upg[id];
+const mileEvery = () => has('seize') ? 8 : 10;
+const turnerMult = () => 1 + 0.25 * S.lifeTurners;
+const globalMult = () => turnerMult() * (has('stretch') ? 2 : 1);
+const clickValue = () => (has('click') ? 5 : 1) * globalMult();
+
+function tierMult(i) {
+  let m = Math.pow(2, Math.floor(S.bought[i] / mileEvery()));
+  if (has('company') && i >= 4) m *= 3;
+  return m;
+}
+function costOf(i, bought = S.bought[i]) {
+  let c = TASKS[i].cost * Math.pow(TASKS[i].mult, bought);
+  if (has('skip') && i <= 2) c *= 0.5;
+  return c;
+}
+function productionPerSec() { // Time per second, right now
+  return S.amt[0] * tierMult(0) * TASKS[0].rate * globalMult();
+}
+function funAverage() {
+  let n = 0, s = 0;
+  for (let i = 0; i < TASKS.length; i++) { n += S.bought[i]; s += S.bought[i] * TASKS[i].fun; }
+  return n ? s / n : 1;
+}
+function turnerGain() {
+  if (S.runTotal < TURNER_THRESHOLD) return 0;
+  let g = Math.floor(Math.pow(S.runTotal / TURNER_THRESHOLD, TURNER_EXP) );
+  if (has('paradox')) g = Math.floor(g * 1.5);
+  return Math.max(g, 1);
+}
+
+/* ------------------------------------------------------------------ simulation */
+
+function step(dt) {
+  for (let i = TASKS.length - 1; i >= 0; i--) {
+    const p = S.amt[i] * tierMult(i) * TASKS[i].rate * dt;
+    if (i === 0) {
+      const t = p * globalMult();
+      S.time += t; S.runTotal += t; S.lifeTotal += t;
+    } else {
+      S.amt[i - 1] += p;
+    }
+  }
+  S.realRun += dt;
+}
+
+function autobuy() {
+  const lo = has('autoD') ? 0 : -1, hi = has('autoD') ? 1 : -1;
+  for (let i = lo; i >= 0 && i <= hi; i++) buyMax(i, true);
+  if (has('autoF')) for (let i = 3; i < TASKS.length; i++) buyMax(i, true);
+}
+
+function buy(i, silent) {
+  const c = costOf(i);
+  if (S.time < c) return false;
+  S.time -= c; S.bought[i]++; S.amt[i]++;
+  return true;
+}
+function buyMax(i) {
+  let n = 0;
+  while (n < 500 && buy(i)) n++;
+  return n;
+}
+
+/* ------------------------------------------------------------------ formatting */
+
+const SUF = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+function fmt(n, d = 2) {
+  if (!isFinite(n)) return '∞';
+  if (n < 1000) return n < 10 && n !== Math.floor(n) ? n.toFixed(d) : (n < 100 && n !== Math.floor(n) ? n.toFixed(1) : Math.floor(n).toString());
+  const e = Math.floor(Math.log10(n) / 3);
+  if (e < SUF.length) return (n / Math.pow(1000, e)).toFixed(d) + SUF[e];
+  const ex = Math.floor(Math.log10(n));
+  return (n / Math.pow(10, ex)).toFixed(2) + 'e' + ex;
+}
+function fmtClock(sec) {
+  sec = Math.floor(sec);
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+  return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0');
+}
+const TIME_UNITS = [
+  ['second', 1], ['minute', 60], ['hour', 3600], ['day', 86400], ['week', 604800], ['year', 52 * 604800],
+];
+function timeParts(sec) {
+  let u = 0;
+  while (u < TIME_UNITS.length - 1 && sec >= TIME_UNITS[u + 1][1]) u++;
+  const v = sec / TIME_UNITS[u][1];
+  const shown = fmt(v, 2);
+  const one = Math.abs(v - 1) < 0.005;
+  return [shown, TIME_UNITS[u][0] + (one ? '' : 's')];
+}
+function fmtTime(sec) { const [v, u] = timeParts(sec); return v + ' ' + u; }
+
+/* ------------------------------------------------------------------ ticker messages */
+
+const MSG_BORED = [
+  'You check the clock. It has gone backwards. Surely.',
+  'A watched pot never boils. A watched clock actively retreats.',
+  'Every minute feels like an hour when you are counting minutes.',
+  'You count the ceiling tiles. Twice. The second time gets you 4 seconds.',
+  'Time is a flat circle, and it is a very beige one.',
+  'You have read the back of the shampoo bottle. Again.',
+];
+const MSG_MID = [
+  'The hours are starting to blur a little.',
+  'Funny. You almost forgot to check the clock.',
+  'Things go quicker when you are doing something you do not hate.',
+  'Was it really lunchtime already?',
+  'Somewhere between dull and delightful, the afternoon slips by.',
+];
+const MSG_FUN = [
+  'Time flies when you are having fun. It also files taxes, apparently.',
+  'You look up. The sun has set. You are absolutely fine with this.',
+  'Nobody ever lay on their deathbed wishing they had queued longer.',
+  'The clock is still there, but it has stopped nagging.',
+  'An hour? That felt like five minutes.',
+  'You have never been less aware of the time, or had more of it.',
+];
+let tickerIdx = 0, tickerAt = 0;
+function updateTicker(force) {
+  const now = Date.now();
+  if (!force && now - tickerAt < 9000) return;
+  tickerAt = now;
+  const f = funAverage(), el = document.getElementById('ticker');
+  let pool, cls = '';
+  if (S.bought[0] === 0 && S.runTotal < 10) pool = ['You have no time at all. Start by waiting around. It is the only thing left to do.'];
+  else if (f < 1.8) pool = MSG_BORED;
+  else if (f < 3) pool = MSG_MID;
+  else { pool = MSG_FUN; cls = 'fun'; }
+  el.textContent = pool[tickerIdx++ % pool.length];
+  el.className = 'ticker ' + cls;
+}
+
+/* ------------------------------------------------------------------ DOM build */
+
+const $ = id => document.getElementById(id);
+const taskEls = [];
+
+function buildTasks() {
+  const host = $('tasks');
+  host.innerHTML = '';
+  TASKS.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'task locked';
+    el.innerHTML = `
+      <div>
+        <div><span class="tname">${t.name}</span><span class="tfun">${FUN_NAMES[t.fun]}</span></div>
+        <div class="tflav">${t.flavor}</div>
+        <div class="tinfo"></div>
+        <div class="milebar"><div></div></div>
+      </div>
+      <div class="tbuy">
+        <button class="buy"><span class="lbl">Buy</span><span class="c"></span></button>
+        <button class="buy max">Max</button>
+      </div>`;
+    const [b1, bm] = el.querySelectorAll('button');
+    b1.onclick = () => { buy(i); renderAll(); };
+    bm.onclick = () => { buyMax(i); renderAll(); };
+    host.appendChild(el);
+    taskEls.push({ el, info: el.querySelector('.tinfo'), c: el.querySelector('.c'), b1, bm, bar: el.querySelector('.milebar > div') });
+  });
+}
+
+function buildUpgrades() {
+  const host = $('upgs');
+  host.innerHTML = '';
+  UPGRADES.forEach(u => {
+    const b = document.createElement('button');
+    b.className = 'upg';
+    b.dataset.id = u.id;
+    b.innerHTML = `<div class="n">${u.name}</div><div class="d">${u.desc}</div><div class="c"></div>`;
+    b.onclick = () => {
+      if (has(u.id) || S.turners < u.cost) return;
+      S.turners -= u.cost; S.upg[u.id] = true;
+      toast(u.name + ' learned.');
+      save(true); renderAll();
+    };
+    host.appendChild(b);
+  });
+}
+
+/* ------------------------------------------------------------------ render */
+
+function render() {
+  const bp = timeParts(S.time);
+  $('bank').textContent = bp[0];
+  $('bankunit').textContent = bp[1] + ' bought';
+  $('rate').textContent = '+' + fmt(productionPerSec(), 2) + ' seconds per second';
+  $('waitnote').textContent = '+' + fmt(clickValue(), 1) + (clickValue() === 1 ? ' second. Riveting.' : ' seconds.');
+
+  const f = funAverage();
+  $('funv').textContent = S.bought.some(b => b) ? FUN_NAMES[Math.round(f)] : '–';
+  $('funbarfill').style.width = ((f - 1) / 4 * 100) + '%';
+  $('realclock').textContent = fmtClock(S.realRun);
+  $('turnbonus').textContent = '×' + fmt(turnerMult(), 2) + (has('stretch') ? ' (×2 more)' : '');
+
+  taskEls.forEach((t, i) => {
+    const unlocked = S.bought[i] > 0 || S.time >= costOf(i) * 0.5 || (i > 0 && S.bought[i - 1] > 0 && S.time >= costOf(i) * 0.1);
+    t.el.classList.toggle('locked', !unlocked);
+    if (!unlocked) return;
+    const c = costOf(i);
+    t.b1.disabled = S.time < c;
+    t.bm.disabled = S.time < c;
+    t.c.textContent = fmtTime(c);
+    const target = i === 0 ? 'seconds' : TASKS[i - 1].name;
+    const per = tierMult(i) * TASKS[i].rate * (i === 0 ? globalMult() : 1);
+    t.info.innerHTML = `Owned <b class="mono">${fmt(S.amt[i], 1)}</b> · bought ${S.bought[i]} · each makes <b class="mono">${fmt(per, 2)}</b> ${i === 0 ? 'seconds' : 'of "' + target + '"'}/s · <b>×${fmt(tierMult(i), 1)}</b>`;
+    const every = mileEvery();
+    t.bar.style.width = ((S.bought[i] % every) / every * 100) + '%';
+  });
+
+  // prestige tab
+  const g = turnerGain();
+  $('turnerhave').textContent = S.turners;
+  $('rewinds').textContent = S.rewinds;
+  $('rewind').disabled = g < 1;
+  $('turnergain').innerHTML = g >= 1
+    ? `Rewinding now would grant <span class="big mono">${g}</span> Time Turner${g === 1 ? '' : 's'}. (Based on <span class="mono">${fmtTime(S.runTotal)}</span> bought this timeline.)`
+    : `Buy <span class="mono">${fmtTime(TURNER_THRESHOLD)}</span> in one timeline to earn your first Time Turner. (Currently ${fmtTime(S.runTotal)}.)`;
+  const unspendable = S.rewinds === 0 && S.turners === 0;
+  document.querySelectorAll('.upg').forEach(b => {
+    const u = UPGRADES.find(x => x.id === b.dataset.id);
+    const owned = has(u.id);
+    b.classList.toggle('owned', owned);
+    b.classList.toggle('cant', !owned && S.turners < u.cost);
+    b.querySelector('.c').textContent = owned ? 'Learned' : u.cost + ' Turner' + (u.cost === 1 ? '' : 's');
+  });
+  const affordable = UPGRADES.some(u => !has(u.id) && S.turners >= u.cost);
+  $('turnerbadge').textContent = (g >= 1 || affordable) ? '●' : '';
+
+  const tl = $('timelines');
+  tl.innerHTML = S.timelines.length
+    ? S.timelines.slice(-6).reverse().map(x => `Timeline ${x.n}: bought ${fmtTime(x.total)} → +${x.turners} Turner${x.turners === 1 ? '' : 's'}`).join('<br>')
+    : 'No other timelines yet. This is the first, and so far the only, you.';
+}
+function renderAll() { render(); }
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 1800);
+}
+
+/* ------------------------------------------------------------------ prestige */
+
+const REWIND_LINES = [
+  'You twist the hourglass. The day unwinds.',
+  'The sun rises in the west, briefly.',
+  'You wake up knowing exactly what is going to happen. Mostly.',
+  'This time, you bring snacks.',
+];
+
+function rewind() {
+  const g = turnerGain();
+  if (g < 1) return;
+  if (S.rewinds === 0 && !confirm('Turn back time? Your Time, tasks and progress this timeline reset, but you keep the Time Turners and everything you learned.')) return;
+  const f = $('flash');
+  $('flashmsg').textContent = REWIND_LINES[Math.floor(Math.random() * REWIND_LINES.length)];
+  f.classList.add('on');
+  setTimeout(() => {
+    S.timelines.push({ n: S.rewinds + 1, total: S.runTotal, turners: g });
+    S.turners += g; S.lifeTurners += g; S.rewinds++;
+    S.time = has('head') ? 100 : 10;
+    S.runTotal = 0; S.amt = TASKS.map(() => 0); S.bought = TASKS.map(() => 0);
+    S.realRun = 0;
+    save(true); renderAll(); updateTicker(true);
+  }, 1200);
+  setTimeout(() => f.classList.remove('on'), 1900);
+}
+
+/* ------------------------------------------------------------------ save / load */
+
+function save(quiet) {
+  try {
+    S.last = Date.now();
+    localStorage.setItem(SAVE_KEY, JSON.stringify(S));
+    if (!quiet) toast('Saved.');
+  } catch (e) { if (!quiet) toast('Could not save (storage blocked?).'); }
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const o = JSON.parse(raw);
+    S = Object.assign(freshState(), o);
+    while (S.amt.length < TASKS.length) { S.amt.push(0); S.bought.push(0); }
+  } catch (e) { S = freshState(); }
+}
+function offline() {
+  const secs = Math.min((Date.now() - S.last) / 1000, 8 * 3600);
+  if (secs < 5) return;
+  const before = S.time;
+  const n = 4000, dt = secs / n;
+  for (let k = 0; k < n; k++) { step(dt); if (k % 50 === 0) autobuy(); }
+  toast('While you were away: +' + fmtTime(S.time - before));
+}
+
+/* ------------------------------------------------------------------ wiring */
+
+$('wait').onclick = () => {
+  const v = clickValue();
+  S.time += v; S.runTotal += v; S.lifeTotal += v; S.clicks++;
+  render();
+};
+$('maxall').onclick = maxAll;
+function maxAll() { for (let i = TASKS.length - 1; i >= 0; i--) buyMax(i); render(); }
+$('rewind').onclick = rewind;
+$('save').onclick = () => save(false);
+$('export').onclick = () => {
+  save(true);
+  const s = btoa(unescape(encodeURIComponent(JSON.stringify(S))));
+  (navigator.clipboard ? navigator.clipboard.writeText(s).then(() => toast('Save copied to clipboard.')) : Promise.reject()).catch(() => prompt('Copy your save:', s));
+};
+$('import').onclick = () => {
+  const s = prompt('Paste a save string:');
+  if (!s) return;
+  try {
+    const o = JSON.parse(decodeURIComponent(escape(atob(s.trim()))));
+    S = Object.assign(freshState(), o);
+    S.last = Date.now();
+    save(true); renderAll(); toast('Save loaded.');
+  } catch (e) { toast('That does not look like a save.'); }
+};
+$('hardreset').onclick = () => {
+  if (!confirm('Wipe EVERYTHING, including Time Turners? There is no turning this back.')) return;
+  S = freshState(); save(true); renderAll();
+};
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === b));
+  $('tab-tasks').classList.toggle('hidden', b.dataset.tab !== 'tasks');
+  $('tab-turner').classList.toggle('hidden', b.dataset.tab !== 'turner');
+  render();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'm' || e.key === 'M') maxAll();
+  if (e.code === 'Space' && document.activeElement === document.body) { e.preventDefault(); $('wait').click(); }
+});
+
+/* ------------------------------------------------------------------ main loop */
+
+buildTasks();
+buildUpgrades();
+load();
+offline();
+updateTicker(true);
+render();
+
+let lastFrame = performance.now(), autoClock = 0, saveClock = 0;
+setInterval(() => {
+  const now = performance.now();
+  const dt = Math.min((now - lastFrame) / 1000, 1);
+  lastFrame = now;
+  step(dt);
+  autoClock += dt; saveClock += dt;
+  if (autoClock > 0.25) { autoClock = 0; autobuy(); }
+  if (saveClock > 10) { saveClock = 0; save(true); }
+  updateTicker(false);
+  render();
+}, 100);
+
+window.addEventListener('beforeunload', () => save(true));
+// expose a tiny debug handle for tinkering in the console
+window.__time = { get S() { return S; }, add(n) { S.time += n; S.runTotal += n; render(); } };
+})();
+</script>
+</body>
+</html>
