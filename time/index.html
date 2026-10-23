@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>time</title>
+<title>Time</title>
 <style>
   :root {
     --bg: #0d1020;
@@ -185,7 +185,7 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>time</h1>
+    <h1>Time</h1>
     <div class="tagline">you never seem to have enough. let's buy some.</div>
   </header>
 
@@ -251,7 +251,7 @@ const FUN_NAMES = ['', 'Deadly dull', 'Tolerable', 'Pretty good', 'Great fun', '
 // rate: how much one unit makes per second. Tier 0 makes Time, tier n makes tier n-1.
 // That chain is what makes growth polynomial: tier k's stock grows like t^(k+1).
 const TASKS = [
-  { name: 'Watch Paint Dry',        fun: 1, cost: 10,    mult: 1.18, rate: 0.25,  flavor: 'Somehow it was only 40 seconds ago.' },
+  { name: 'Watch Paint Dry',        fun: 1, cost: 30,    mult: 1.18, rate: 0.25,  flavor: 'Somehow it was only 40 seconds ago.' },
   { name: 'Queue at the Post Office', fun: 1, cost: 250,   mult: 1.30, rate: 0.06,  flavor: 'You are number 87 in the queue.' },
   { name: 'Do Your Tax Return',     fun: 2, cost: 8e3,    mult: 1.40, rate: 0.05,  flavor: 'Where did you put that receipt?' },
   { name: 'Tidy the Garage',        fun: 2, cost: 4e5,    mult: 1.50, rate: 0.04,  flavor: 'Podcast on. Not bad, actually.' },
@@ -261,6 +261,7 @@ const TASKS = [
   { name: 'Lose Yourself in a Hobby', fun: 5, cost: 1e14,  mult: 1.90, rate: 0.02,  flavor: 'Hours are a rumour.' },
 ];
 
+const CLICKS_REQUIRED = 30;  // manual waits needed before the first task can be bought (lifetime, one-off)
 const TURNER_THRESHOLD = 1e6;   // total Time bought in a timeline before a turner is worth it
 const TURNER_EXP = 0.3;
 
@@ -282,7 +283,7 @@ const SAVE_KEY = 'time-incremental-v1';
 
 function freshState() {
   return {
-    time: 10,
+    time: 0,
     runTotal: 0,
     lifeTotal: 0,
     amt: TASKS.map(() => 0),
@@ -353,9 +354,10 @@ function autobuy() {
   if (has('autoF')) for (let i = 3; i < TASKS.length; i++) buyMax(i, true);
 }
 
+function gated(i) { return i === 0 && S.clicks < CLICKS_REQUIRED; }
 function buy(i, silent) {
   const c = costOf(i);
-  if (S.time < c) return false;
+  if (gated(i) || S.time < c) return false;
   S.time -= c; S.bought[i]++; S.amt[i]++;
   return true;
 }
@@ -460,7 +462,7 @@ function buildTasks() {
     b1.onclick = () => { buy(i); renderAll(); };
     bm.onclick = () => { buyMax(i); renderAll(); };
     host.appendChild(el);
-    taskEls.push({ el, info: el.querySelector('.tinfo'), c: el.querySelector('.c'), b1, bm, bar: el.querySelector('.milebar > div') });
+    taskEls.push({ el, lbl: el.querySelector('.lbl'), info: el.querySelector('.tinfo'), c: el.querySelector('.c'), b1, bm, bar: el.querySelector('.milebar > div') });
   });
 }
 
@@ -498,13 +500,15 @@ function render() {
   $('turnbonus').textContent = '×' + fmt(turnerMult(), 2) + (has('stretch') ? ' (×2 more)' : '');
 
   taskEls.forEach((t, i) => {
-    const unlocked = S.bought[i] > 0 || S.time >= costOf(i) * 0.5 || (i > 0 && S.bought[i - 1] > 0 && S.time >= costOf(i) * 0.1);
+    const unlocked = i === 0 || S.bought[i] > 0 || S.time >= costOf(i) * 0.5 || (i > 0 && S.bought[i - 1] > 0 && S.time >= costOf(i) * 0.1);
     t.el.classList.toggle('locked', !unlocked);
     if (!unlocked) return;
     const c = costOf(i);
-    t.b1.disabled = S.time < c;
-    t.bm.disabled = S.time < c;
-    t.c.textContent = fmtTime(c);
+    const g = gated(i);
+    t.b1.disabled = g || S.time < c;
+    t.bm.disabled = g || S.time < c;
+    t.lbl.textContent = g ? 'Locked' : 'Buy';
+    t.c.textContent = g ? 'Wait around ' + S.clicks + '/' + CLICKS_REQUIRED : fmtTime(c);
     const target = i === 0 ? 'seconds' : TASKS[i - 1].name;
     const per = tierMult(i) * TASKS[i].rate * (i === 0 ? globalMult() : 1);
     t.info.innerHTML = `Owned <b class="mono">${fmt(S.amt[i], 1)}</b> · bought ${S.bought[i]} · each makes <b class="mono">${fmt(per, 2)}</b> ${i === 0 ? 'seconds' : 'of "' + target + '"'}/s · <b>×${fmt(tierMult(i), 1)}</b>`;
@@ -562,7 +566,7 @@ function rewind() {
   setTimeout(() => {
     S.timelines.push({ n: S.rewinds + 1, total: S.runTotal, turners: g });
     S.turners += g; S.lifeTurners += g; S.rewinds++;
-    S.time = has('head') ? 100 : 10;
+    S.time = has('head') ? 100 : 0;
     S.runTotal = 0; S.amt = TASKS.map(() => 0); S.bought = TASKS.map(() => 0);
     S.realRun = 0;
     save(true); renderAll(); updateTicker(true);
