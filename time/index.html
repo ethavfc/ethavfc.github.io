@@ -9,7 +9,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='12'%20fill='%23110c14'/%3E%3Cpath%20d='M16%2011h32M16%2053h32'%20stroke='%23d4af37'%20stroke-width='7'%20stroke-linecap='round'/%3E%3Cpath%20d='M22%2012c0%2012%208%2015%2010%2020-2%205-10%208-10%2020M42%2012c0%2012-8%2015-10%2020%202%205%2010%208%2010%2020'%20fill='none'%20stroke='%23d4af37'%20stroke-width='6'%20stroke-linejoin='round'/%3E%3Cpath%20d='M25%2014h14c-1%207-5%2010-7%2013-2-3-6-6-7-13z'%20fill='%23d4af37'%20opacity='.6'/%3E%3Cpath%20d='M23%2051c1-7%206-10%209-12%203%202%208%205%209%2012z'%20fill='%23d4af37'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #110c14;
@@ -37,12 +37,11 @@
   .wrap { max-width: 920px; margin: 0 auto; padding: 18px 16px 60px; }
 
   header { text-align: center; padding: 10px 0 6px; }
-  h1, h2, .tab { font-family: 'Cinzel', serif; }
+  h1, h2, .tab { font-family: 'IM Fell English SC', serif; }
   h1 {
-    margin: 0; font-weight: normal; letter-spacing: .3em; font-size: 38px;
+    margin: 0; font-weight: 400; letter-spacing: .25em; font-size: 42px;
     color: var(--gold); padding-left: .3em; text-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
   }
-  .tagline { color: var(--dim); font-style: italic; font-size: 16px; margin-top: 4px; }
 
   .hero {
     background: linear-gradient(180deg, var(--panel2), var(--panel));
@@ -59,7 +58,7 @@
     margin-top: 18px; padding: 14px 32px; font: inherit; font-size: 18px;
     background: transparent; color: var(--text); cursor: pointer;
     border: 1px solid var(--gold2); border-radius: 4px; transition: .12s;
-    user-select: none; font-family: 'Cinzel', serif; letter-spacing: 1px;
+    user-select: none; font-family: 'IM Fell English SC', serif; letter-spacing: 1px;
   }
   .waitbtn, .waitbtn * { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
   .waitbtn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -73,7 +72,7 @@
     display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 14px;
   }
   .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
-  .stat .k { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); font-family: 'Cinzel', serif; }
+  .stat .k { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); font-family: 'IM Fell English SC', serif; }
   .stat .v { font-size: 19px; margin-top: 4px; }
   .funbar { height: 6px; background: #0a080d; border-radius: 4px; margin-top: 7px; overflow: hidden; border: 1px solid #000; }
   .funbar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--bad), var(--teal), var(--gold)); transition: width .4s; }
@@ -93,7 +92,7 @@
   }
   .task:hover { border-color: #7a6845; }
   .task.locked { display: none; }
-  .tname { font-size: 19px; font-family: 'Cinzel', serif; }
+  .tname { font-size: 19px; font-family: 'IM Fell English SC', serif; }
   .tfun { font-size: 14px; color: var(--teal); margin-left: 10px; font-style: italic; }
   .tinfo { font-size: 14px; color: var(--dim); margin-top: 5px; }
   .tinfo b { color: var(--text); font-weight: normal; }
@@ -101,7 +100,7 @@
   .buy {
     font: inherit; font-size: 15px; padding: 9px 12px; cursor: pointer; min-width: 120px;
     background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 4px;
-    font-family: 'Cinzel', serif;
+    font-family: 'IM Fell English SC', serif;
   }
   .buy .c { display: block; font-size: 13px; color: var(--gold); font-family: 'Crimson Text', serif; margin-top: 2px;}
   .buy:disabled { opacity: .45; cursor: not-allowed; }
@@ -114,7 +113,7 @@
   .small {
     font: inherit; font-size: 14px; padding: 8px 14px; cursor: pointer;
     background: var(--panel); color: var(--dim); border: 1px solid var(--line); border-radius: 4px;
-    font-family: 'Cinzel', serif;
+    font-family: 'IM Fell English SC', serif;
   }
   .small:hover { color: var(--text); border-color: var(--gold2); }
 
@@ -125,7 +124,7 @@
   .rewind {
     margin-top: 14px; padding: 12px 24px; font: inherit; font-size: 17px; cursor: pointer;
     background: linear-gradient(180deg, #3a2f12, #2a220d); color: var(--gold);
-    border: 1px solid var(--gold2); border-radius: 4px; font-family: 'Cinzel', serif; letter-spacing: 1px;
+    border: 1px solid var(--gold2); border-radius: 4px; font-family: 'IM Fell English SC', serif; letter-spacing: 1px;
   }
   .rewind:disabled { opacity: .4; cursor: not-allowed; }
 
@@ -134,17 +133,16 @@
     background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px;
     text-align: left; font: inherit; color: var(--text); cursor: pointer;
   }
-  .upg .n { color: var(--gold); font-size: 17px; font-family: 'Cinzel', serif; }
+  .upg .n { color: var(--gold); font-size: 17px; font-family: 'IM Fell English SC', serif; }
   .upg .d { color: var(--dim); font-size: 14.5px; margin: 6px 0 8px; line-height: 1.4; }
   .upg .c { font-size: 13.5px; color: var(--teal); font-style: italic; }
   .upg.owned { border-color: var(--teal); opacity: .8; cursor: default; background: rgba(59, 158, 130, 0.05); }
   .upg.cant { opacity: .55; cursor: not-allowed; }
 
   .log { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; margin-top: 14px; }
-  .log h3 { margin: 0 0 8px; font-weight: normal; font-size: 16px; color: var(--dim); font-family: 'Cinzel', serif; letter-spacing: .12em; }
+  .log h3 { margin: 0 0 8px; font-weight: normal; font-size: 16px; color: var(--dim); font-family: 'IM Fell English SC', serif; letter-spacing: .12em; }
   .log div { font-size: 15px; color: var(--dim); margin: 4px 0; }
 
-  footer { text-align: center; color: var(--dim); font-size: 14px; margin-top: 30px; font-style: italic; }
   .hidden { display: none !important; }
 
   #flash {
@@ -183,7 +181,6 @@
 <div class="wrap">
   <header>
     <h1>TIME</h1>
-    <div class="tagline">You never seem to have enough time, go ahead and conjure some</div>
   </header>
 
   <section class="hero">
@@ -199,7 +196,7 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="tasks">How You Spend It</button>
+    <button class="tab active" data-tab="tasks">Chores</button>
     <button class="tab hidden" data-tab="turner" id="turnertab">Time Turner <span class="badge" id="turnerbadge"></span></button>
   </div>
 
@@ -213,7 +210,7 @@
   <section id="tab-turner" class="hidden">
     <div class="turner-hero">
       <h2>The Time Turner</h2>
-      <p id="turnerlore">You discover a tiny golden hourglass that holds an important power, once you figure out the spell, it will restart time. What you learned the first time round stays with you. That is Wisdom, and it lets you do things differently this time.</p>
+      <p id="turnerlore">A tiny golden hourglass on a fine chain, worn round the neck. The Ministry of Magic once lent these out to students with timetables that made no sense, and a single turn of the hourglass was enough to send the wearer back an hour. This one has been tinkered with, so it carries you all the way back to the start of the day, the way the modified Time-Turner in the Cursed Child did. Just make sure your earlier self never catches sight of you. What you learned the first time round stays with you. That is Wisdom, and it lets you do things differently this time.</p>
       <p>Wisdom: <span class="big mono" id="turnerhave">0</span> &nbsp;·&nbsp; Lifetime rewinds: <span class="mono" id="rewinds">0</span></p>
       <p id="turnergain"></p>
       <button class="rewind" id="rewind" disabled>Turn Back Time</button>
@@ -228,7 +225,6 @@
     <button class="small" id="import">Import</button>
     <button class="small" id="hardreset">Reset</button>
   </div>
-  <footer>An incremental game about wasting less time. How ironic.</footer>
 </div>
 
 <div id="flash"><div class="rw"></div><div class="msg" id="flashmsg">Rewinding the sands of time&hellip;</div></div>
@@ -246,7 +242,7 @@ const FUN_NAMES = ['', 'Mind-Numbing', 'Passable', 'Quite Magical', 'Bewitching'
 const TASKS = [
   { name: 'Polish Brass Cauldrons',    fun: 1, cost: 30,     mult: 1.22, rate: 0.3 },
   { name: 'Queue for the Owl Post',    fun: 1, cost: 500,    mult: 1.28, rate: 1.5 },
-  { name: 'Write a Runes Essay',       fun: 2, cost: 1.5e4,  mult: 1.34, rate: 8 },
+  { name: 'Study Potions',           fun: 2, cost: 1.5e4,  mult: 1.34, rate: 8 },
   { name: 'De-Gnome the Garden',       fun: 2, cost: 6e5,    mult: 1.40, rate: 40 },
   { name: 'Play Enchanted Chess',      fun: 3, cost: 3e7,    mult: 1.46, rate: 220 },
   { name: 'Attend a Magical Feast',    fun: 4, cost: 2e9,    mult: 1.52, rate: 1200 },
@@ -264,14 +260,14 @@ const OFFLINE_EFFICIENCY = 0.5;
 const OFFLINE_CAP = 2 * 3600;
 
 const UPGRADES = [
-  { id: 'head',    name: 'Head Start',         cost: 1,  desc: 'Every timeline begins with 5 Polish Brass Cauldrons already at work.' },
-  { id: 'click',   name: 'Muscle Memory',      cost: 2,  desc: 'You have waited around before. Waiting is worth ×5.' },
-  { id: 'company', name: 'Good Company',       cost: 3,  desc: 'The fun tasks (Enchanted Chess and beyond) are ×3 as effective. Time flies on a broomstick.' },
-  { id: 'skip',    name: 'Skip the Boring Bits', cost: 4,  desc: 'The three dullest tasks cost 50% less. You learned to bring a book.' },
-  { id: 'stretch', name: 'Stretch the Hour',   cost: 6,  desc: 'All the spare time you conjure is ×1.5. An afternoon lasts forever.' },
-  { id: 'wind',    name: 'Second Wind',        cost: 7,  desc: 'Each time you Wait Around you also gain 2% of what you make every second.' },
-  { id: 'seize',   name: 'Seize the Day',      cost: 8,  desc: 'Task milestones arrive every 8 purchases instead of 10.' },
-  { id: 'paradox', name: 'Benevolent Paradox', cost: 12, desc: 'You meet yourself coming the other way. Wisdom earned ×1.5.' },
+  { id: 'head',    name: 'Head Start',         cost: 1,  desc: 'Start every new timeline with 5 Polish Brass Cauldrons already working for you, so the first few minutes go faster.' },
+  { id: 'click',   name: 'Muscle Memory',      cost: 2,  desc: 'Each click of Wait Around gives 5 times as much spare time.' },
+  { id: 'company', name: 'Good Company',       cost: 3,  desc: 'Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 3 times as much spare time.' },
+  { id: 'skip',    name: 'Skip the Boring Bits', cost: 4,  desc: 'Polish Brass Cauldrons, Owl Post queues and Study Potions cost half as much to buy.' },
+  { id: 'stretch', name: 'Stretch the Hour',   cost: 6,  desc: 'Every source of spare time, clicks included, produces 1.5 times as much.' },
+  { id: 'wind',    name: 'Second Wind',        cost: 7,  desc: 'Each click of Wait Around also gives 2% of the spare time you earn per second, so clicking stays useful as you grow.' },
+  { id: 'seize',   name: 'Seize the Day',      cost: 8,  desc: 'Each chore doubles its output after every 8 purchases instead of every 10.' },
+  { id: 'paradox', name: 'Benevolent Paradox', cost: 12, desc: 'Turning back time gives you 1.5 times as much Wisdom.' },
 ];
 
 /* ------------------------------------------------------------------ state management */
