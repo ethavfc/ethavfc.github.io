@@ -146,19 +146,38 @@
   .hidden { display: none !important; }
 
   #flash {
-    position: fixed; inset: 0; z-index: 50; background: #08050a; display: flex;
-    align-items: center; justify-content: center; flex-direction: column; opacity: 0; pointer-events: none;
-    transition: opacity .6s; text-align: center; padding: 20px;
+    position: fixed; inset: 0; z-index: 50; opacity: 0; pointer-events: none; overflow: hidden;
+    background: #000; transition: opacity 1.1s ease-in;
   }
   #flash.on { opacity: 1; pointer-events: all; }
-  #flash .rw {
-    width: 120px; height: 120px; border: 3px solid var(--gold); border-radius: 50%; position: relative; margin-bottom: 22px;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  #flash .lid {
+    position: absolute; left: -5%; width: 110%; height: 52%; background: #000; opacity: 0;
   }
-  #flash .rw::before { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 46px; margin-top: -46px; background: var(--gold); transform-origin: 50% 100%; animation: spinback .6s linear infinite; }
-  #flash .rw::after { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 30px; margin-top: -30px; background: var(--gold); transform-origin: 50% 100%; animation: spinback 7.2s linear infinite; }
-  @keyframes spinback { to { transform: rotate(-360deg); } }
-  #flash .msg { color: var(--gold); font-size: 24px; font-style: italic; font-family: 'Crimson Text', serif; }
+  #flash .lid.top { top: 0; box-shadow: 0 14px 40px 18px #000; }
+  #flash .lid.bot { bottom: 0; box-shadow: 0 -14px 40px 18px #000; }
+  /* once the screen is black we swap the solid background for two "eyelids" and blink awake */
+  #flash.wake { background: transparent; transition: none; }
+  #flash.wake .lid { opacity: 1; }
+  #flash.wake .lid.top { animation: lidtop 2.6s ease-in-out forwards; }
+  #flash.wake .lid.bot { animation: lidbot 2.6s ease-in-out forwards; }
+  @keyframes lidtop {
+    0%   { transform: translateY(0); }
+    16%  { transform: translateY(-26%); }
+    28%  { transform: translateY(0); }
+    38%  { transform: translateY(0); }
+    58%  { transform: translateY(-40%); }
+    66%  { transform: translateY(-14%); }
+    100% { transform: translateY(-110%); }
+  }
+  @keyframes lidbot {
+    0%   { transform: translateY(0); }
+    16%  { transform: translateY(26%); }
+    28%  { transform: translateY(0); }
+    38%  { transform: translateY(0); }
+    58%  { transform: translateY(40%); }
+    66%  { transform: translateY(14%); }
+    100% { transform: translateY(110%); }
+  }
 
   .toast {
     position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
@@ -227,7 +246,7 @@
   </div>
 </div>
 
-<div id="flash"><div class="rw"></div><div class="msg" id="flashmsg">Rewinding the sands of time&hellip;</div></div>
+<div id="flash"><div class="lid top"></div><div class="lid bot"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -266,9 +285,46 @@ const UPGRADES = [
   { id: 'skip',    name: 'Skip the Boring Bits', cost: 4,  desc: 'Polish Brass Cauldrons, Owl Post queues and Study Potions cost half as much to buy.' },
   { id: 'stretch', name: 'Stretch the Hour',   cost: 6,  desc: 'Every source of spare time, clicks included, produces 1.5 times as much.' },
   { id: 'wind',    name: 'Second Wind',        cost: 7,  desc: 'Each click of Wait Around also gives 2% of the spare time you earn per second, so clicking stays useful as you grow.' },
-  { id: 'seize',   name: 'Seize the Day',      cost: 8,  desc: 'Each chore doubles its output after every 8 purchases instead of every 10.' },
+  { id: 'seize',   name: 'Seize the Day',      cost: 8,  desc: 'Each chore doubles its output after every 8 purchases instead of every 10.', fx: { mile: 8 } },
+  { id: 'pocket1', name: 'Pocketed Hours',     cost: 9,  desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you.', fx: { start: 2e5 } },
+  { id: 'ungate',  name: 'Keen Student',       cost: 10, desc: 'Polish Brass Cauldrons no longer need any Wait Around clicks before you can buy them.', fx: { ungate: 1 } },
+  { id: 'clickb',  name: 'Practised Patience', cost: 10, desc: 'Each click of Wait Around gives 3 times as much spare time.', fx: { clickMul: 3 } },
+  { id: 'thrift',  name: 'Frugal Wizard',      cost: 11, desc: 'Every chore costs 10% less to buy.', fx: { costMul: 0.9 } },
   { id: 'paradox', name: 'Benevolent Paradox', cost: 12, desc: 'Turning back time gives you 1.5 times as much Wisdom.' },
+  { id: 'homely',  name: 'Domestic Bliss',     cost: 14, desc: 'Polish Brass Cauldrons, Owl Post queues, Study Potions and De-Gnoming each produce 2 times as much spare time.', fx: { tier: [0, 3, 2] } },
+  { id: 'mom1',    name: 'Gathering Momentum', cost: 16, desc: 'Spare time builds up speed within a timeline: up to +50% production, reached after 10 real minutes.', fx: { mom: 0.5 } },
+  { id: 'pocket2', name: 'Borrowed Mornings',  cost: 18, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 5e6 } },
+  { id: 'wis1',    name: 'Accumulated Lore',   cost: 20, desc: 'Each point of Wisdom you have ever earned now boosts production by 16% instead of 15%.', fx: { wisBonus: 0.01 } },
+  { id: 'seize2',  name: 'Seize the Hour',     cost: 22, desc: 'Each chore doubles its output after every 6 purchases.', fx: { mile: 6 } },
+  { id: 'auto1',   name: 'Helpful Familiar',   cost: 24, desc: 'A small familiar buys as many Polish Brass Cauldrons, Owl Post queues and Study Potions as you can afford, once a second.', fx: { auto: 3 } },
+  { id: 'grand',   name: 'Grand Occasions',    cost: 26, desc: 'Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 2 times as much spare time.', fx: { tier: [4, 7, 2] } },
+  { id: 'dream',   name: 'Dreamless Sleep',    cost: 28, desc: 'While you are away, you earn 75% of your normal spare time instead of 50%, for up to 4 hours instead of 2.', fx: { offEff: 0.25, offCap: 7200 } },
+  { id: 'pocket3', name: 'Stolen Seasons',     cost: 30, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 1e8 } },
+  { id: 'curve1',  name: 'Gentler Curve',      cost: 32, desc: 'Chore prices climb 10% more slowly with each purchase.', fx: { grow: 0.9 } },
+  { id: 'wind2',   name: 'Second Nature',      cost: 35, desc: 'Each click of Wait Around gives a further 3% of the spare time you earn per second.', fx: { windAdd: 0.03 } },
+  { id: 'paradox2',name: 'Paradox Engine',     cost: 38, desc: 'Turning back time gives you 1.5 times as much Wisdom, on top of everything else.', fx: { wisGain: 1.5 } },
+  { id: 'mom2',    name: 'Roaring Momentum',   cost: 40, desc: 'Gathering Momentum builds up to a further +50% production in the same 10 real minutes.', fx: { mom: 0.5 } },
+  { id: 'surplus', name: 'Borrowed Time',      cost: 44, desc: 'Every source of spare time, clicks included, produces 2 times as much.', fx: { mul: 2 } },
+  { id: 'auto2',   name: 'Loyal House-Elf',    cost: 48, desc: 'Your helper now also buys De-Gnoming, Enchanted Chess and Magical Feasts, once a second.', fx: { auto: 6 } },
+  { id: 'pocket4', name: 'Lost Decades',       cost: 50, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 1.5e9 } },
+  { id: 'curve2',  name: 'Gentler Still',      cost: 55, desc: 'Chore prices climb a further 10% more slowly with each purchase.', fx: { grow: 0.9 } },
+  { id: 'wis2',    name: 'Deep Lore',          cost: 60, desc: 'Each point of Wisdom you have ever earned boosts production by a further 2%.', fx: { wisBonus: 0.02 } },
+  { id: 'seize3',  name: 'Seize Every Moment', cost: 65, desc: 'Each chore doubles its output after every 5 purchases.', fx: { mile: 5 } },
+  { id: 'dilate',  name: 'Time Dilation',      cost: 70, desc: 'De-Gnoming, Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 3 times as much spare time.', fx: { tier: [3, 7, 3] } },
+  { id: 'pocket5', name: 'Forgotten Centuries', cost: 75, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 2.5e10 } },
+  { id: 'paradox3',name: 'Infinite Regress',   cost: 80, desc: 'Turning back time gives you 2 times as much Wisdom, on top of everything else.', fx: { wisGain: 2 } },
+  { id: 'surplus2',name: 'Temporal Surplus',   cost: 85, desc: 'Every source of spare time, clicks included, produces 2 times as much.', fx: { mul: 2 } },
+  { id: 'auto3',   name: 'Master of the House', cost: 90, desc: 'Your helper now buys every chore for you, once a second.', fx: { auto: 8 } },
+  { id: 'purse',   name: 'Charmed Purse',      cost: 95, desc: 'Every chore costs half as much to buy.', fx: { costMul: 0.5 } },
+  { id: 'pocket6', name: 'Echoes of Everything', cost: 100, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 4e11 } },
 ];
+
+/* generic effect helpers for upgrades that carry an fx block */
+const owned = () => UPGRADES.filter(u => u.fx && S.upg[u.id]);
+const fxSum = k => owned().reduce((a, u) => a + (u.fx[k] || 0), 0);
+const fxMul = k => owned().reduce((a, u) => a * (u.fx[k] || 1), 1);
+const fxMax = (k, d) => owned().reduce((a, u) => u.fx[k] !== undefined ? Math.min(a, u.fx[k]) : a, d);
+const fxBest = k => owned().reduce((a, u) => Math.max(a, u.fx[k] || 0), 0);
 
 /* ------------------------------------------------------------------ state management */
 
@@ -286,19 +342,23 @@ let S = freshState();
 /* ------------------------------------------------------------------ maths */
 
 const has = id => !!S.upg[id];
-const mileEvery = () => has('seize') ? 8 : 10;
-const wisdomMult = () => 1 + WISDOM_BONUS * S.lifeWisdom;
-const globalMult = () => wisdomMult() * (has('stretch') ? 1.5 : 1);
-const clickValue = () => (has('click') ? 5 : 1) * globalMult() + (has('wind') ? 0.02 * productionPerSec() : 0);
+const mileEvery = () => fxMax('mile', 10);
+const wisdomMult = () => 1 + (WISDOM_BONUS + fxSum('wisBonus')) * S.lifeWisdom;
+const momentumMult = () => 1 + fxSum('mom') * Math.min(1, S.realRun / 600);
+const otherMult = () => (has('stretch') ? 1.5 : 1) * fxMul('mul') * momentumMult();
+const globalMult = () => wisdomMult() * otherMult();
+const clickValue = () => (has('click') ? 5 : 1) * fxMul('clickMul') * globalMult() + ((has('wind') ? 0.02 : 0) + fxSum('windAdd')) * productionPerSec();
 
 function tierMult(i) {
   let m = Math.pow(2, Math.floor(S.bought[i] / mileEvery()));
   if (has('company') && i >= 4) m *= 3;
+  owned().forEach(u => { const t = u.fx.tier; if (t && i >= t[0] && i <= t[1]) m *= t[2]; });
   return m;
 }
 
 function costOf(i, bought = S.bought[i]) {
-  let c = TASKS[i].cost * Math.pow(TASKS[i].mult, bought);
+  const growth = 1 + (TASKS[i].mult - 1) * fxMul('grow');
+  let c = TASKS[i].cost * Math.pow(growth, bought) * fxMul('costMul');
   if (has('skip') && i <= 2) c *= 0.5;
   return c;
 }
@@ -318,7 +378,9 @@ function funAverage() {
 function wisdomGain() {
   if (S.runTotal < WISDOM_THRESHOLD) return 0;
   let g = Math.floor(WISDOM_COEF * Math.pow(S.runTotal / WISDOM_THRESHOLD, WISDOM_EXP));
-  return Math.max(has('paradox') ? Math.floor(g * 1.5) : g, 1);
+  g = has('paradox') ? Math.floor(g * 1.5) : g;
+  g = Math.floor(g * fxMul('wisGain'));
+  return Math.max(g, 1);
 }
 
 /* ------------------------------------------------------------------ simulation & actions */
@@ -330,8 +392,8 @@ function step(dt) {
 }
 
 function catchUp(secs) { 
-  secs = Math.min(secs, OFFLINE_CAP);
-  const t = productionPerSec() * secs * OFFLINE_EFFICIENCY;
+  secs = Math.min(secs, OFFLINE_CAP + fxSum('offCap'));
+  const t = productionPerSec() * secs * Math.min(1, OFFLINE_EFFICIENCY + fxSum('offEff'));
   S.time += t; S.runTotal += t; S.lifeTotal += t;
   return t;
 }
@@ -342,7 +404,7 @@ function checkDiscovery() {
   toast('Hidden in an ancient tome, something glints: a Time Turner. Have a look.', 7000);
 }
 
-function gated(i) { return i === 0 && S.clicks < CLICKS_REQUIRED; }
+function gated(i) { return i === 0 && S.clicks < CLICKS_REQUIRED && !fxBest('ungate'); }
 
 function buy(i) {
   const c = costOf(i);
@@ -359,6 +421,32 @@ function buyMax(i) {
 function maxAll() { 
   for (let i = TASKS.length - 1; i >= 0; i--) buyMax(i); 
   render(); 
+}
+
+/* Start-of-timeline package: spends a free budget on whatever chores give the most spare time per second of cost. */
+function applyStart() {
+  S.bought = TASKS.map(() => 0);
+  let left = fxBest('start');
+  for (let guard = 0; guard < 5000 && left > 0; guard++) {
+    let best = -1, score = 0;
+    for (let i = 0; i < TASKS.length; i++) {
+      if (gated(i)) continue;
+      const c = costOf(i);
+      if (c > left) continue;
+      const sc = TASKS[i].rate / c;
+      if (sc > score) { score = sc; best = i; }
+    }
+    if (best < 0) break;
+    left -= costOf(best);
+    S.bought[best]++;
+  }
+  S.amt = S.bought.map((b, i) => b + ((i === 0 && has('head')) ? 5 : 0));
+}
+
+function autoBuy() {
+  const n = fxBest('auto');
+  if (!n) return;
+  for (let i = Math.min(n, TASKS.length) - 1; i >= 0; i--) buyMax(i);
 }
 
 /* ------------------------------------------------------------------ formatting */
@@ -422,7 +510,7 @@ function buildDOM() {
   UPGRADES.forEach(u => {
     const b = document.createElement('button');
     b.className = 'upg';
-    b.innerHTML = `<div class="n">${u.name}</div><div class="d">${u.desc}</div><div class="c"></div>`;
+    b.innerHTML = `<div class="n">${u.name}</div><div class="d">${u.desc.replace('{start}', u.fx && u.fx.start ? fmtTime(u.fx.start) : '')}</div><div class="c"></div>`;
     b.onclick = () => {
       if (has(u.id) || S.wisdom < u.cost) return;
       S.wisdom -= u.cost; S.upg[u.id] = true;
@@ -452,7 +540,7 @@ function render() {
   
   $('turnertab').classList.toggle('hidden', !S.found);
   $('turnstat').classList.toggle('hidden', !S.found);
-  $('turnbonus').textContent = '×' + fmt(wisdomMult(), 2) + (has('stretch') ? ' (×1.5 more)' : '');
+  $('turnbonus').textContent = '×' + fmt(wisdomMult(), 2) + (otherMult() > 1.0001 ? ' (×' + fmt(otherMult(), 2) + ' more)' : '');
 
   taskEls.forEach((t, i) => {
     // USING S.runTotal INSTEAD OF S.time ENSURES UNLOCKED ITEMS NEVER DISAPPEAR
@@ -500,33 +588,28 @@ function toast(msg, ms = 1800) {
 
 /* ------------------------------------------------------------------ prestige */
 
-const REWIND_LINES = [
-  'The hourglass spins on its chain. The day unwinds.',
-  'The sun rises in the west, briefly.',
-  'You wake up knowing exactly what is going to happen. Mostly.',
-  'This time, you bring enchanted snacks.',
-];
-
 let rewinding = false;
 function rewind() {
   const g = wisdomGain();
   if (g < 1 || rewinding) return;
   rewinding = true;
-  
-  $('flashmsg').textContent = REWIND_LINES[Math.floor(Math.random() * REWIND_LINES.length)];
-  $('flash').classList.add('on');
-  
-  setTimeout(() => {
+  const fl = $('flash');
+  fl.classList.remove('wake');
+  fl.classList.add('on');                       // fade to black
+
+  setTimeout(() => {                            // fully black: reset the world, then blink awake
     S.timelines.push({ n: S.rewinds + 1, total: S.runTotal, wisdom: g });
     S.wisdom += g; S.lifeWisdom += g; S.rewinds++;
     S.time = S.runTotal = S.realRun = 0;
-    S.amt = TASKS.map((_, i) => (i === 0 && has('head')) ? 5 : 0);
-    S.bought = TASKS.map(() => 0);
-    rewinding = false;
+    applyStart();
     save(true); render();
-  }, 1200);
-  
-  setTimeout(() => $('flash').classList.remove('on'), 1900);
+    fl.classList.add('wake');
+  }, 1400);
+
+  setTimeout(() => {                            // eyes open, tidy up
+    fl.classList.remove('on', 'wake');
+    rewinding = false;
+  }, 1400 + 2700);
 }
 
 /* ------------------------------------------------------------------ save / load */
@@ -617,13 +700,14 @@ offline();
 checkDiscovery();
 render();
 
-let lastFrame = performance.now(), saveClock = 0;
+let lastFrame = performance.now(), saveClock = 0, autoClock = 0;
 setInterval(() => {
   const now = performance.now(), real = (now - lastFrame) / 1000, dt = Math.min(real, 1);
   lastFrame = now;
   step(dt);
   if (real > 1) catchUp(real - 1); 
   checkDiscovery();
+  if ((autoClock += dt) >= 1) { autoClock = 0; autoBuy(); }
   if ((saveClock += dt) > 10) { saveClock = 0; save(true); }
   render();
 }, 100);
