@@ -271,56 +271,59 @@ const TASKS = [
 
 const CLICKS_REQUIRED = 30;        
 const WISDOM_THRESHOLD = 604800;   
-const WISDOM_COEF = 2;             
-const WISDOM_EXP = 0.45;
+const WISDOM_COEF = 3;             
+const WISDOM_EXP = 0.2;
 const WISDOM_BONUS = 0.15;         
 const DISCOVER_AT = 0.5;           
 const OFFLINE_EFFICIENCY = 0.5;    
 const OFFLINE_CAP = 2 * 3600;
 
 const UPGRADES = [
-  { id: 'head',    name: 'Head Start',         cost: 1,  desc: 'Start every new timeline with 5 Polish Brass Cauldrons already working for you, so the first few minutes go faster.' },
-  { id: 'click',   name: 'Muscle Memory',      cost: 2,  desc: 'Each click of Wait Around gives 5 times as much spare time.' },
+  { id: 'head',    name: 'Head Start',         cost: 2,  desc: 'Start every new timeline with 5 Polish Brass Cauldrons already working for you, so the first few minutes go faster.' },
+  { id: 'click',   name: 'Muscle Memory',      cost: 3,  desc: 'Each click of Wait Around gives 5 times as much spare time.' },
   { id: 'company', name: 'Good Company',       cost: 3,  desc: 'Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 3 times as much spare time.' },
   { id: 'skip',    name: 'Skip the Boring Bits', cost: 4,  desc: 'Polish Brass Cauldrons, Owl Post queues and Study Potions cost half as much to buy.' },
   { id: 'stretch', name: 'Stretch the Hour',   cost: 6,  desc: 'Every source of spare time, clicks included, produces 1.5 times as much.' },
   { id: 'wind',    name: 'Second Wind',        cost: 7,  desc: 'Each click of Wait Around also gives 2% of the spare time you earn per second, so clicking stays useful as you grow.' },
-  { id: 'seize',   name: 'Seize the Day',      cost: 8,  desc: 'Each chore doubles its output after every 8 purchases instead of every 10.', fx: { mile: 8 } },
-  { id: 'pocket1', name: 'Pocketed Hours',     cost: 9,  desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you.', fx: { start: 2e5 } },
-  { id: 'ungate',  name: 'Keen Student',       cost: 10, desc: 'Polish Brass Cauldrons no longer need any Wait Around clicks before you can buy them.', fx: { ungate: 1 } },
-  { id: 'clickb',  name: 'Practised Patience', cost: 10, desc: 'Each click of Wait Around gives 3 times as much spare time.', fx: { clickMul: 3 } },
-  { id: 'thrift',  name: 'Frugal Wizard',      cost: 11, desc: 'Every chore costs 10% less to buy.', fx: { costMul: 0.9 } },
-  { id: 'paradox', name: 'Benevolent Paradox', cost: 12, desc: 'Turning back time gives you 1.5 times as much Wisdom.' },
-  { id: 'homely',  name: 'Domestic Bliss',     cost: 14, desc: 'Polish Brass Cauldrons, Owl Post queues, Study Potions and De-Gnoming each produce 2 times as much spare time.', fx: { tier: [0, 3, 2] } },
-  { id: 'mom1',    name: 'Gathering Momentum', cost: 16, desc: 'Spare time builds up speed within a timeline: up to +50% production, reached after 10 real minutes.', fx: { mom: 0.5 } },
-  { id: 'pocket2', name: 'Borrowed Mornings',  cost: 18, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 5e6 } },
-  { id: 'wis1',    name: 'Accumulated Lore',   cost: 20, desc: 'Each point of Wisdom you have ever earned now boosts production by 16% instead of 15%.', fx: { wisBonus: 0.01 } },
-  { id: 'seize2',  name: 'Seize the Hour',     cost: 22, desc: 'Each chore doubles its output after every 6 purchases.', fx: { mile: 6 } },
-  { id: 'auto1',   name: 'Helpful Familiar',   cost: 24, desc: 'A small familiar buys as many Polish Brass Cauldrons, Owl Post queues and Study Potions as you can afford, once a second.', fx: { auto: 3 } },
-  { id: 'grand',   name: 'Grand Occasions',    cost: 26, desc: 'Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 2 times as much spare time.', fx: { tier: [4, 7, 2] } },
-  { id: 'dream',   name: 'Dreamless Sleep',    cost: 28, desc: 'While you are away, you earn 75% of your normal spare time instead of 50%, for up to 4 hours instead of 2.', fx: { offEff: 0.25, offCap: 7200 } },
-  { id: 'pocket3', name: 'Stolen Seasons',     cost: 30, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 1e8 } },
-  { id: 'curve1',  name: 'Gentler Curve',      cost: 32, desc: 'Chore prices climb 10% more slowly with each purchase.', fx: { grow: 0.9 } },
-  { id: 'wind2',   name: 'Second Nature',      cost: 35, desc: 'Each click of Wait Around gives a further 3% of the spare time you earn per second.', fx: { windAdd: 0.03 } },
-  { id: 'paradox2',name: 'Paradox Engine',     cost: 38, desc: 'Turning back time gives you 1.5 times as much Wisdom, on top of everything else.', fx: { wisGain: 1.5 } },
-  { id: 'mom2',    name: 'Roaring Momentum',   cost: 40, desc: 'Gathering Momentum builds up to a further +50% production in the same 10 real minutes.', fx: { mom: 0.5 } },
-  { id: 'surplus', name: 'Borrowed Time',      cost: 44, desc: 'Every source of spare time, clicks included, produces 2 times as much.', fx: { mul: 2 } },
-  { id: 'auto2',   name: 'Loyal House-Elf',    cost: 48, desc: 'Your helper now also buys De-Gnoming, Enchanted Chess and Magical Feasts, once a second.', fx: { auto: 6 } },
-  { id: 'pocket4', name: 'Lost Decades',       cost: 50, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 1.5e9 } },
-  { id: 'curve2',  name: 'Gentler Still',      cost: 55, desc: 'Chore prices climb a further 10% more slowly with each purchase.', fx: { grow: 0.9 } },
-  { id: 'wis2',    name: 'Deep Lore',          cost: 60, desc: 'Each point of Wisdom you have ever earned boosts production by a further 2%.', fx: { wisBonus: 0.02 } },
-  { id: 'seize3',  name: 'Seize Every Moment', cost: 65, desc: 'Each chore doubles its output after every 5 purchases.', fx: { mile: 5 } },
-  { id: 'dilate',  name: 'Time Dilation',      cost: 70, desc: 'De-Gnoming, Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 3 times as much spare time.', fx: { tier: [3, 7, 3] } },
-  { id: 'pocket5', name: 'Forgotten Centuries', cost: 75, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 2.5e10 } },
-  { id: 'paradox3',name: 'Infinite Regress',   cost: 80, desc: 'Turning back time gives you 2 times as much Wisdom, on top of everything else.', fx: { wisGain: 2 } },
-  { id: 'surplus2',name: 'Temporal Surplus',   cost: 85, desc: 'Every source of spare time, clicks included, produces 2 times as much.', fx: { mul: 2 } },
-  { id: 'auto3',   name: 'Master of the House', cost: 90, desc: 'Your helper now buys every chore for you, once a second.', fx: { auto: 8 } },
-  { id: 'purse',   name: 'Charmed Purse',      cost: 95, desc: 'Every chore costs half as much to buy.', fx: { costMul: 0.5 } },
-  { id: 'pocket6', name: 'Echoes of Everything', cost: 100, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 4e11 } },
+  { id: 'seize',   name: 'Seize the Day',      cost: 10,  desc: 'Each chore doubles its output after every 8 purchases instead of every 10.', fx: { mile: 8 } },
+  { id: 'pocket1', name: 'Pocketed Hours',     cost: 13,  desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you.', fx: { start: 2e5 } },
+  { id: 'ungate',  name: 'Keen Student',       cost: 16, desc: 'Polish Brass Cauldrons no longer need any Wait Around clicks before you can buy them.', fx: { ungate: 1 } },
+  { id: 'clickb',  name: 'Practised Patience', cost: 21, desc: 'Each click of Wait Around gives 3 times as much spare time.', fx: { clickMul: 3 } },
+  { id: 'thrift',  name: 'Frugal Wizard',      cost: 28, desc: 'Every chore costs 10% less to buy.', fx: { costMul: 0.9 } },
+  { id: 'paradox', name: 'Benevolent Paradox', cost: 36, desc: 'Turning back time gives you 1.5 times as much Wisdom.' },
+  { id: 'homely',  name: 'Domestic Bliss',     cost: 47, desc: 'Polish Brass Cauldrons, Owl Post queues, Study Potions and De-Gnoming each produce 2 times as much spare time.', fx: { tier: [0, 3, 2] } },
+  { id: 'mom1',    name: 'Gathering Momentum', cost: 61, desc: 'Spare time builds up speed within a timeline: up to +50% production, reached after 10 real minutes.', fx: { mom: 0.5 } },
+  { id: 'pocket2', name: 'Borrowed Mornings',  cost: 79, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 5e6 } },
+  { id: 'wis1',    name: 'Accumulated Lore',   cost: 100, desc: 'Each point of Wisdom you have ever earned now boosts production by 16% instead of 15%.', fx: { wisBonus: 0.01 } },
+  { id: 'seize2',  name: 'Seize the Hour',     cost: 130, desc: 'Each chore doubles its output after every 7 purchases.', fx: { mile: 7 } },
+  { id: 'auto1',   name: 'Helpful Familiar',   cost: 170, desc: 'A small familiar buys as many Polish Brass Cauldrons, Owl Post queues and Study Potions as you can afford, once a second.', fx: { auto: 3 } },
+  { id: 'grand',   name: 'Grand Occasions',    cost: 220, desc: 'Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 2 times as much spare time.', fx: { tier: [4, 7, 2] } },
+  { id: 'dream',   name: 'Dreamless Sleep',    cost: 290, desc: 'While you are away, you earn 75% of your normal spare time instead of 50%, for up to 4 hours instead of 2.', fx: { offEff: 0.25, offCap: 7200 } },
+  { id: 'pocket3', name: 'Stolen Seasons',     cost: 380, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 3e7 } },
+  { id: 'curve1',  name: 'Gentler Curve',      cost: 490, desc: 'Chore prices climb 5% more slowly with each purchase.', fx: { grow: 0.95 } },
+  { id: 'wind2',   name: 'Second Nature',      cost: 640, desc: 'Each click of Wait Around gives a further 3% of the spare time you earn per second.', fx: { windAdd: 0.03 } },
+  { id: 'paradox2',name: 'Paradox Engine',     cost: 840, desc: 'Turning back time gives you 1.25 times as much Wisdom, on top of everything else.', fx: { wisGain: 1.25 } },
+  { id: 'mom2',    name: 'Roaring Momentum',   cost: 1100, desc: 'Gathering Momentum builds up to a further +50% production in the same 10 real minutes.', fx: { mom: 0.5 } },
+  { id: 'surplus', name: 'Borrowed Time',      cost: 1400, desc: 'Every source of spare time, clicks included, produces 1.5 times as much.', fx: { mul: 1.5 } },
+  { id: 'auto2',   name: 'Loyal House-Elf',    cost: 1800, desc: 'Your helper now also buys De-Gnoming, Enchanted Chess and Magical Feasts, once a second.', fx: { auto: 6 } },
+  { id: 'pocket4', name: 'Lost Decades',       cost: 2400, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 2e8 } },
+  { id: 'curve2',  name: 'Gentler Still',      cost: 3100, desc: 'Chore prices climb a further 5% more slowly with each purchase.', fx: { grow: 0.95 } },
+  { id: 'wis2',    name: 'Deep Lore',          cost: 4000, desc: 'Each point of Wisdom you have ever earned boosts production by a further 2%.', fx: { wisBonus: 0.02 } },
+  { id: 'seize3',  name: 'Seize Every Moment', cost: 5200, desc: 'Each chore doubles its output after every 6 purchases.', fx: { mile: 6 } },
+  { id: 'dilate',  name: 'Time Dilation',      cost: 6800, desc: 'De-Gnoming, Enchanted Chess, Magical Feasts, Broom Tournaments and Ancient Spells each produce 2 times as much spare time.', fx: { tier: [3, 7, 2] } },
+  { id: 'pocket5', name: 'Forgotten Centuries', cost: 8900, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 2e9 } },
+  { id: 'paradox3',name: 'Infinite Regress',   cost: 12000, desc: 'Turning back time gives you 1.5 times as much Wisdom, on top of everything else.', fx: { wisGain: 1.5 } },
+  { id: 'surplus2',name: 'Temporal Surplus',   cost: 15000, desc: 'Every source of spare time, clicks included, produces 1.5 times as much.', fx: { mul: 1.5 } },
+  { id: 'auto3',   name: 'Master of the House', cost: 19000, desc: 'Your helper now buys every chore for you, once a second.', fx: { auto: 8 } },
+  { id: 'purse',   name: 'Charmed Purse',      cost: 25000, desc: 'Every chore costs 30% less to buy.', fx: { costMul: 0.7 } },
+  { id: 'pocket6', name: 'Echoes of Everything', cost: 33000, desc: 'Every new timeline begins with chores worth {start} of spare time already bought for you. (Replaces earlier head starts of this kind.)', fx: { start: 1.5e10 } },
 ];
 
 /* generic effect helpers for upgrades that carry an fx block */
-const owned = () => UPGRADES.filter(u => u.fx && S.upg[u.id]);
+let OWNED = [];
+let S;                                   // declared early so refreshOwned can read it
+const refreshOwned = () => { OWNED = UPGRADES.filter(u => u.fx && S.upg[u.id]); };
+const owned = () => OWNED;
 const fxSum = k => owned().reduce((a, u) => a + (u.fx[k] || 0), 0);
 const fxMul = k => owned().reduce((a, u) => a * (u.fx[k] || 1), 1);
 const fxMax = (k, d) => owned().reduce((a, u) => u.fx[k] !== undefined ? Math.min(a, u.fx[k]) : a, d);
@@ -337,7 +340,8 @@ function freshState() {
     timelines: [], last: Date.now(),
   };
 }
-let S = freshState();
+S = freshState();
+refreshOwned();
 
 /* ------------------------------------------------------------------ maths */
 
@@ -404,6 +408,13 @@ function checkDiscovery() {
   toast('Hidden in an ancient tome, something glints: a Time Turner. Have a look.', 7000);
 }
 
+function learn(u) {
+  if (S.upg[u.id] || S.wisdom < u.cost) return false;
+  S.wisdom -= u.cost; S.upg[u.id] = true;
+  refreshOwned();
+  return true;
+}
+
 function gated(i) { return i === 0 && S.clicks < CLICKS_REQUIRED && !fxBest('ungate'); }
 
 function buy(i) {
@@ -461,6 +472,18 @@ function fmt(n, d = 2) {
   return (n / Math.pow(10, ex)).toFixed(2) + 'e' + ex;
 }
 
+const WSUF = ['', 'k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+function fmtW(n) {                         // whole numbers up to 999, then 1.1k, 10.5k, 105k, 1.25M ...
+  if (!isFinite(n)) return '∞';
+  n = Math.floor(n);
+  if (n < 1000) return String(n);
+  const sig = v => { const d = v >= 100 ? 0 : (v >= 10 ? 1 : 2); return parseFloat(v.toFixed(d)); };
+  let e = Math.floor(Math.log10(n) / 3), v = n / Math.pow(1000, e), r = sig(v);
+  if (r >= 1000) { e++; v /= 1000; r = sig(v); }          // 999.96k rounds up to 1M, not "1000k"
+  if (e >= WSUF.length) { const ex = Math.floor(Math.log10(n)); return sig(n / Math.pow(10, ex)) + 'e' + ex; }
+  return r + WSUF[e];
+}
+
 function fmtClock(sec) {
   if (!isFinite(sec)) return '0:00';
   sec = Math.floor(sec);
@@ -512,8 +535,7 @@ function buildDOM() {
     b.className = 'upg';
     b.innerHTML = `<div class="n">${u.name}</div><div class="d">${u.desc.replace('{start}', u.fx && u.fx.start ? fmtTime(u.fx.start) : '')}</div><div class="c"></div>`;
     b.onclick = () => {
-      if (has(u.id) || S.wisdom < u.cost) return;
-      S.wisdom -= u.cost; S.upg[u.id] = true;
+      if (!learn(u)) return;
       toast(u.name + ' learned.');
       save(true); render();
     };
@@ -530,8 +552,9 @@ function render() {
   const [tAmt, tUnit] = timeParts(S.time);
   $('bank').textContent = tAmt;
   $('bankunit').textContent = tUnit.charAt(0).toUpperCase() + tUnit.slice(1) + ' of Spare Time Conjured';
-  $('rate').textContent = '+' + fmt(productionPerSec(), 2) + ' seconds per second';
-  $('waitnote').textContent = '+' + fmt(clickValue(), 1) + (clickValue() === 1 ? ' second. Magical.' : ' seconds.');
+  $('rate').textContent = '+' + fmtTime(productionPerSec()) + ' per second';
+  const cv = clickValue();
+  $('waitnote').textContent = '+' + fmtTime(cv) + (cv === 1 ? '. Magical.' : '.');
 
   const f = funAverage();
   $('funv').textContent = S.bought.some(b => b) ? FUN_NAMES[Math.round(f)] : '–';
@@ -561,23 +584,23 @@ function render() {
   });
 
   const g = wisdomGain();
-  $('turnerhave').textContent = S.wisdom;
+  $('turnerhave').textContent = fmtW(S.wisdom);
   $('rewinds').textContent = S.rewinds;
   $('rewind').disabled = g < 1;
   $('turnergain').innerHTML = g >= 1
-    ? `Turning back time now would grant <span class="big mono">${g}</span> Wisdom. (Based on <span class="mono">${fmtTime(S.runTotal)}</span> of spare time conjured this timeline.)`
+    ? `Turning back time now would grant <span class="big mono">${fmtW(g)}</span> Wisdom. (Based on <span class="mono">${fmtTime(S.runTotal)}</span> of spare time conjured this timeline.)`
     : `Conjure <span class="mono">${fmtTime(WISDOM_THRESHOLD)}</span> of spare time in one timeline to earn your first Wisdom. (Currently ${fmtTime(S.runTotal)}.)`;
   
   upgEls.forEach(u => {
     const owned = has(u.id);
     u.el.classList.toggle('owned', owned);
     u.el.classList.toggle('cant', !owned && S.wisdom < u.cost);
-    u.c.textContent = owned ? 'Learned' : u.cost + ' Wisdom';
+    u.c.textContent = owned ? 'Learned' : fmtW(u.cost) + ' Wisdom';
   });
   
   $('turnerbadge').textContent = (g >= 1 || upgEls.some(u => !has(u.id) && S.wisdom >= u.cost) || S.unseen) ? '●' : '';
   $('timelines').innerHTML = S.timelines.length
-    ? S.timelines.slice(-6).reverse().map(x => `Timeline ${x.n}: Conjured ${fmtTime(x.total)} of spare time → +${x.wisdom} Wisdom`).join('<br>')
+    ? S.timelines.slice(-6).reverse().map(x => `Timeline ${x.n}: Conjured ${fmtTime(x.total)} of spare time → +${fmtW(x.wisdom)} Wisdom`).join('<br>')
     : 'No other timelines yet. This is the first, and so far the only, you.';
 }
 
@@ -629,7 +652,8 @@ function load() {
     S = Object.assign(freshState(), JSON.parse(raw));
     while (S.amt.length < TASKS.length) { S.amt.push(0); S.bought.push(0); }
     if (S.rewinds > 0 || S.lifeWisdom > 0) S.found = true;
-  } catch (e) { S = freshState(); }
+    refreshOwned();
+  } catch (e) { S = freshState(); refreshOwned(); }
 }
 
 function offline() {
@@ -676,10 +700,11 @@ $('import').onclick = () => {
     S = Object.assign(freshState(), JSON.parse(decodeURIComponent(escape(atob(s.trim())))));
     S.last = Date.now();
     if (S.rewinds > 0 || S.lifeWisdom > 0) S.found = true;
+    refreshOwned();
     save(true); render(); toast('Save loaded.');
   } catch (e) { toast('That does not look like a save.'); }
 };
-twoStep($('hardreset'), 'Reset', 'Reset It All? Click Again', () => { S = freshState(); save(true); render(); });
+twoStep($('hardreset'), 'Reset', 'Reset It All? Click Again', () => { S = freshState(); refreshOwned(); save(true); render(); });
 
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
   if (b.dataset.tab === 'turner') S.unseen = false;
@@ -713,7 +738,7 @@ setInterval(() => {
 }, 100);
 
 window.addEventListener('beforeunload', () => save(true));
-window.__time = { get S() { return S; }, add(n) { S.time += n; S.runTotal += n; render(); }, buy, step, costOf, productionPerSec };
+window.__time = { get S() { return S; }, add(n) { S.time += n; S.runTotal += n; render(); }, buy, step, costOf, productionPerSec, clickValue, wisdomGain, applyStart, autoBuy, learn, refreshOwned, UPGRADES, TASKS, fmtW };
 })();
 </script>
 </body>
